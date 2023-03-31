@@ -1,0 +1,4 @@
+config.json
+node_modules
+deploy-commands.js
+.DS_Store
