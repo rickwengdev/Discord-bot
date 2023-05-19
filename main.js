@@ -3,7 +3,13 @@ const path = require('node:path')
 const {Client, Events, GatewayIntentBits, Collection} = require('discord.js')
 const {token} = require('./config.json')
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] })
+const client = new Client({ intents: [
+	GatewayIntentBits.Guilds,
+	GatewayIntentBits.GuildMessages,
+	GatewayIntentBits.MessageContent,
+	GatewayIntentBits.GuildMembers,
+	GatewayIntentBits.GuildVoiceStates,
+] })
 
 client.commands = new Collection();
 
@@ -31,7 +37,13 @@ client.on(Events.InteractionCreate, async interaction => {
 	}
 
 	try {
-		await command.execute(interaction);
+		try {
+			await command.execute(interaction);
+		} catch (error) {
+			if (error.code !== 'InteractionAlreadyReplied') {
+				console.error('Error executing command:', error);
+			}
+		}
 	} catch (error) {
 		console.error(error);
 		await interaction.reply({ content: 'There was an error while executing this command!', ephemeral: true });

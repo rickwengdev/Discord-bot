@@ -10,7 +10,8 @@ module.exports = {
         .setDescription('user luck number')
         .setRequired(true)),
 async execute(interaction){
-    const computernumber = Math.floor(Math.random() * 100) + 1
+    // const computernumber = Math.floor(Math.random() * 100) + 1
+    const computernumber = 26
     const usernumber = interaction.options.getNumber('lucknumber')
     const imagesurl = getRandomImageUrl()
 
