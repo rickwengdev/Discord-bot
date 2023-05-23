@@ -1,15 +1,11 @@
 const fs = require('node:fs')
 const path = require('node:path')
-const {Client, Events, GatewayIntentBits, Collection} = require('discord.js')
+const {Client, Events, GatewayIntentBits, Collection,Partials} = require('discord.js')
 const {token} = require('./config.json')
-
-const client = new Client({ intents: [
-	GatewayIntentBits.Guilds,
-	GatewayIntentBits.GuildMessages,
-	GatewayIntentBits.MessageContent,
-	GatewayIntentBits.GuildMembers,
-	GatewayIntentBits.GuildVoiceStates,
-] })
+const {handleReactionRole} = require('./roleManager.js');
+/////BASIC CODE/////
+const client = new Client({ intents: [GatewayIntentBits.Guilds,GatewayIntentBits.GuildMessages,GatewayIntentBits.MessageContent,GatewayIntentBits.GuildMembers,GatewayIntentBits.GuildVoiceStates,GatewayIntentBits.GuildMessageReactions],
+							partials: [Partials.Message, Partials.Channel, Partials.Reaction]})
 
 client.commands = new Collection();
 
@@ -53,5 +49,12 @@ client.on(Events.InteractionCreate, async interaction => {
 client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag}`)
 });
+
+///function code///
+client.on('messageReactionAdd', async (reaction, user) => {
+    
+});
+
+
 
 client.login(token)

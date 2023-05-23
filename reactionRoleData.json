@@ -1,0 +1,14 @@
+{
+  "serverId1": {
+    "emojiId": "984264560036937759",
+    "messageId": "1110373094608080906"
+  },
+  "serverId2": {
+    "emojiId": "emojiId2",
+    "messageId": "messageId2"
+  },
+  "yourServerId": {
+    "emojiId": "yourEmojiId",
+    "messageId": "yourMessageId"
+  }
+}
