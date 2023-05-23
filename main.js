@@ -55,6 +55,4 @@ client.on('messageReactionAdd', async (reaction, user) => {
     
 });
 
-
-
 client.login(token)
