@@ -1,3 +1,3 @@
-Function:
-  Music control
-  TRPG Game Simple Bot
+Function:<br>
+  Music control<br>
+  TRPG Game Simple Bot<br>
