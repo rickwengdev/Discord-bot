@@ -59,16 +59,16 @@ const player = createAudioPlayer(); // 创建全局的音频播放器
 let connection = null; // 这里依然使用 let，因为需要在 skipToNextSong 中重新赋值
 
 const createVoiceConnection = interaction => {
-    const channelId = interaction.member.voice.channelId;
-    const channel = interaction.guild.channels.resolve(channelId);
+    const guild = interaction.voiceChannel.guildId;
+    const voiceChannel = interaction.voiceChannel.id;
 
-    if (!channel) {
+    if (!voiceChannel) {
         throw new Error('您需要先加入一个语音频道！');
     }
 
     return joinVoiceChannel({
-        channelId: channel.id,
-        guildId: channel.guild.id,
+        channelId: voiceChannel,
+        guildId: guild,
         adapterCreator: channel.guild.voiceAdapterCreator,
     });
 };

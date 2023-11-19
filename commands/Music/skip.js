@@ -1,5 +1,5 @@
 import {SlashCommandBuilder } from 'discord.js';
-import { skipToNextSong } from '../playerManager.js';
+import { skipToNextSong } from '../../playerManager.js';
 
 export const data = new SlashCommandBuilder()
     .setName('skip')

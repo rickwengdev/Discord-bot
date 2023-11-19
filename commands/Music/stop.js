@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js'
-import { waitForIdleAndPlayNextSong } from '../playerManager.js'
+import { waitForIdleAndPlayNextSong } from '../../playerManager.js'
 
 export const data = new SlashCommandBuilder()
     .setName('stop')

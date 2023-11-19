@@ -1,7 +1,6 @@
-const {SlashCommandBuilder} = require('discord.js')
+import SlashCommandBuilder from 'discord.js'
 
-module.exports = {
-    data : new SlashCommandBuilder()
+export const data = new SlashCommandBuilder()
     .setName('roll_check')
     .setDescription('Roll COC skill check')
     .addNumberOption(option => option
@@ -20,9 +19,11 @@ module.exports = {
     //     .setName('punish_dice')
     //     .setDescription('懲罰骰')
     // )
-    ,
+    
 
-    async execute(interaction){
+
+    export async function execute(){}
+        // Your code here
         const skill = interaction.options.getNumber('skill_levels')
         const diceRolls = []
         const bonusDices = []
@@ -130,5 +131,3 @@ module.exports = {
     //         interaction.reply(resultMessage + `噔噔咚～，大失敗`)
     //     }
     // }
-}
-}

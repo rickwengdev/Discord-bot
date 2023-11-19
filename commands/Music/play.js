@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { playNextSong } from '../playerManager.js';
+import { playNextSong } from '../../playerManager.js';
 
 export const data = new SlashCommandBuilder()
     .setName('play')
@@ -12,7 +12,7 @@ export async function execute(interaction) {
     }
 
     // 交互被延遲，使用回調函數處理回覆
-    await interaction.deferReply({ ephemeral: true }).catch(console.error);
+    await interaction.deferReply({ ephtemeral: true }).cach(console.error);
 
     try {
         // 在 playerManager.js 中處理連接和播放x
