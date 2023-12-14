@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { removeSong } from '../../playerManager.js';
-
+import { removeSong } from '../../datapackge/musicfunction/playerManager.js';
 export const data = new SlashCommandBuilder()
     .setName('remove')
     .setDescription('Remove a song from the playlist')

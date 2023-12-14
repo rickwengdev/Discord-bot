@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { addSong } from '../../playerManager.js';
+import { addSong } from '../../datapackge/musicfunction/playerManager.js';
 import axios from 'axios';
 import cheerio from 'cheerio';
 

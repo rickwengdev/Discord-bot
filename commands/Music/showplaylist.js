@@ -1,6 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js'
-import { getPlaylist } from '../../playerManager.js'
-
+import { getPlaylist } from '../../datapackge/musicfunction/playerManager.js'
 async function viewPlaylist(interaction) {
     const playlist = getPlaylist(interaction.guild.id)
     if (playlist.length === 0) {

@@ -1,15 +1,20 @@
+// 引入 Discord.js 的音頻相關模塊
 import { createAudioPlayer, createAudioResource, joinVoiceChannel, demuxProbe } from '@discordjs/voice';
 import ytdl from 'ytdl-core';
 
-import fs from 'fs'; // 导入fs模块
+// 引入文件系統模塊
+import fs from 'fs';
 
+// 全局變數，存儲各伺服器的播放列表
 let playlists = new Map();
 
+// 將播放列表保存到文件的函數
 const savePlaylists = () => {
     const jsonObject = Object.fromEntries(playlists.entries());
     fs.writeFileSync('playlists.json', JSON.stringify(jsonObject));
 };
 
+// 從文件中加載播放列表的函數
 const loadPlaylists = () => {
     if (fs.existsSync('playlists.json')) {
         try {
@@ -21,6 +26,7 @@ const loadPlaylists = () => {
     }
 };
 
+// 从播放列表中移除歌曲的函數
 const removeSong = (guildId, songUrl) => {
     const playlist = playlists.get(guildId);
     if (!playlist) {
@@ -36,6 +42,7 @@ const removeSong = (guildId, songUrl) => {
     savePlaylists();
 };
 
+// 向播放列表中添加歌曲的函數
 const addSong = (guildId, songUrl) => {
     if (!playlists.has(guildId)) {
         playlists.set(guildId, []);
@@ -44,23 +51,30 @@ const addSong = (guildId, songUrl) => {
     savePlaylists();
 };
 
+// 獲取下一首歌曲的函數
 const getNextSong = (guildId) => {
     const playlist = playlists.get(guildId);
     return playlist ? playlist[0] : null;
 };
 
+// 獲取整個播放列表的函數
 const getPlaylist = (guildId) => {
     return playlists.get(guildId);
 };
 
+// 從文件加載播放列表
 loadPlaylists();
 
-const player = createAudioPlayer(); // 创建全局的音频播放器
-let connection = null; // 这里依然使用 let，因为需要在 skipToNextSong 中重新赋值
+// 創建全局的音頻播放器
+const player = createAudioPlayer();
+// 這里依然使用 let，因為需要在 skipToNextSong 中重新賦值
+let connection = null;
 
+// 創建音頻連接的函數
 const createVoiceConnection = interaction => {
-    const guild = interaction.voiceChannel.guildId;
-    const voiceChannel = interaction.voiceChannel.id;
+    const guild = interaction.guildId;
+    const voiceChannel = interaction.member.voice.channel.id;
+    const adapterCreator = interaction.guild.voiceAdapterCreator;
 
     if (!voiceChannel) {
         throw new Error('您需要先加入一个语音频道！');
@@ -69,10 +83,11 @@ const createVoiceConnection = interaction => {
     return joinVoiceChannel({
         channelId: voiceChannel,
         guildId: guild,
-        adapterCreator: channel.guild.voiceAdapterCreator,
+        adapterCreator: adapterCreator,
     });
 };
 
+// 創建音頻流的函數
 const createStream = songUrl => {
     return ytdl(songUrl, {
         filter: 'audioonly',
@@ -81,6 +96,7 @@ const createStream = songUrl => {
     });
 };
 
+// 創建音頻資源的函數
 const createResource = async stream => {
     const { stream: outputStream, type } = await demuxProbe(stream);
     return createAudioResource(outputStream, {
@@ -90,6 +106,7 @@ const createResource = async stream => {
     });
 };
 
+// 播放下一首歌曲的函數
 const playNextSong = async (interaction, connection) => {
     if (!interaction.member.voice.channelId) {
         throw new Error('You need to join a voice channel first!');
@@ -117,6 +134,7 @@ const playNextSong = async (interaction, connection) => {
     await waitForIdleAndPlayNextSong(interaction, connection, songUrl);
 };
 
+// 等待播放器空閒並播放下一首歌曲的函數
 const waitForIdleAndPlayNextSong = async (interaction, connection, songUrl) => {
     await new Promise(resolve => {
         player.on('idle', () => {
@@ -132,6 +150,7 @@ const waitForIdleAndPlayNextSong = async (interaction, connection, songUrl) => {
     await playNextSong(interaction, null); // 传递 null 以创建新的音频连接
 };
 
+// 跳過到下一首歌曲的函數
 const skipToNextSong = async interaction => {
     // 停止播放并清理资源
     if (player.state.status !== 'idle') {
@@ -144,6 +163,7 @@ const skipToNextSong = async interaction => {
     await playNextSong(interaction);
 };
 
+// 導出所有功能以在其他文件中使用
 export {
     playNextSong,
     skipToNextSong,
@@ -152,4 +172,5 @@ export {
     getNextSong,
     getPlaylist,
     waitForIdleAndPlayNextSong,
+    createVoiceConnection
 };
