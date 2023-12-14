@@ -9,7 +9,6 @@ How to use:
     /remove to remove song
     /showplaylist to show this server song play list
     /skip to skip current song
-    /stop to stop play
 
   COCTRPG :
     Bug fixing
