@@ -12,3 +12,5 @@ How to use:
 
   COCTRPG :
     Bug fixing
+
+  pm2 start main.js --name "my-bot" --watch DISCORD-BOT

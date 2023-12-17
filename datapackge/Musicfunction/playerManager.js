@@ -86,7 +86,8 @@ const createVoiceConnection = (interaction) => {
 
 // 創建音頻流的函數
 const createStream = (songUrl) =>
-    ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
+    ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 }
+);
 
 // 創建音頻資源的函數
 const createResource = async (stream) => {
