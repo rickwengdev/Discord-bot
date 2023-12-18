@@ -11,13 +11,13 @@ export const data = new SlashCommandBuilder()
             .setRequired(true))
     .addBooleanOption(option =>
         option.setName('reliable_vintage_model')
-            .setDescription('The time range is less than two weeks or the number of messages is less than 100'))
+            .setDescription('The time range is more than two weeks or the number of messages is more than 100'))
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
 // 執行 Slash 命令的處理函數
 export async function execute(interaction) {
     const messageNumber = interaction.options.getInteger('message_number') + 1;
-    let timeRangeBig = !interaction.options.getBoolean('reliable_vintage_model');
+    let timeRangeBig = interaction.options.getBoolean('reliable_vintage_model');
     console.log(timeRangeBig);
     if (timeRangeBig === null) timeRangeBig = true;
     await deleteMessagesAsync(interaction, messageNumber, timeRangeBig);
