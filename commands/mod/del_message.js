@@ -10,7 +10,7 @@ export const data = new SlashCommandBuilder()
             .setDescription('The number of the message to delete')
             .setRequired(true))
     .addBooleanOption(option =>
-        option.setName('fast_delete_model')
+        option.setName('reliable_vintage_model')
             .setDescription('The time range is less than two weeks or the number of messages is less than 100'))
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
