@@ -22,10 +22,10 @@ const deleteMessagesAsync = async (interaction, numberOfMessagesToDelete, timeRa
             // 根據 result 的值執行相應的操作
             if (result > 0) {
                 // 刪除操作成功，執行相應的處理
-                await interaction.reply(`Deleted ${result} messages`);
+                await interaction.reply(`Deleted ${result} messages`, { ephemeral: true });
             } else {
                 // 如果 result <= 0，可能表示沒有消息被刪除
-                await interaction.reply('No messages were deleted.');
+                await interaction.reply('No messages were deleted.', { ephemeral: true });
             }
         } catch (error) {
             // 檢查錯誤是否是超時錯誤，如果是，您可以忽略它
