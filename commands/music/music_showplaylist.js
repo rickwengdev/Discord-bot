@@ -19,7 +19,7 @@ async function viewPlaylist(interaction) {
 
 // 定義 slash command 的結構
 export const data = new SlashCommandBuilder()
-    .setName('showplaylist')
+    .setName('music_showplaylist')
     .setDescription('Show the current playlist');
 
 // 執行 slash command 的函數

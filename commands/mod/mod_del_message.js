@@ -3,7 +3,7 @@ import { deleteMessagesAsync } from "../../datapackge/modfunction/modbasicfuntio
 
 // 創建 Slash 命令
 export const data = new SlashCommandBuilder()
-    .setName('del_message')
+    .setName('mod_del_message')
     .setDescription('Delete a message')
     .addIntegerOption(option =>
         option.setName('message_number')

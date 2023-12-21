@@ -3,7 +3,7 @@ import { removeSong } from '../../datapackge/musicfunction/playerManager.js';
 
 // 定義 slash command 的結構
 export const data = new SlashCommandBuilder()
-    .setName('remove')
+    .setName('music_remove')
     .setDescription('Remove a song from the playlist')
     .addStringOption(option => 
         option.setName('url')

@@ -1,7 +1,7 @@
 import {SlashCommandBuilder,PermissionFlagsBits} from 'discord.js'
 
 export const data = new SlashCommandBuilder()
-		.setName('test')
+		.setName('bot_test')
 		.setDescription('test bot')
 		.setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
 

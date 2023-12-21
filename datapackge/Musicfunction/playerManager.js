@@ -34,8 +34,8 @@ const loadPlaylists = () => {
 // 从播放列表中移除歌曲的函數
 const removeSong = (guildId, songUrl) => {
     const playlist = playlists.get(guildId);
-    if (!playlist) {
-        throw new Error('No playlist for this guild.');
+    if (!playlist || playlist.length === 0) {
+        throw new Error('播放清單為空，無法刪除歌曲。');
     }
 
     const songIndex = playlist.indexOf(songUrl);
@@ -66,6 +66,7 @@ loadPlaylists();
 // 創建全局的音頻播放器
 const player = createAudioPlayer();
 let connection = null;
+let songUrl = undefined;
 
 // 創建音頻連接的函數
 const createVoiceConnection = (interaction) => {
@@ -77,11 +78,13 @@ const createVoiceConnection = (interaction) => {
         throw new Error('您需要先加入一个语音频道！');
     }
 
-    return joinVoiceChannel({
+    connection = joinVoiceChannel({
         channelId: voiceChannel,
         guildId: guildId,
         adapterCreator: adapterCreator,
     });
+
+    return connection;
 };
 
 // 創建音頻流的函數
@@ -96,15 +99,16 @@ const createResource = async (stream) => {
 };
 
 // 播放下一首歌曲的函數
-const playNextSong = async (interaction, connection) => {
+const playNextSong = async (interaction) => {
     try {
         const voiceChannelId = interaction.member?.voice.channelId;
         if (!voiceChannelId) {
-            throw new Error('You need to join a voice channel first!');
+            throw new Error('您需要先加入一个语音频道！');
         }
 
-        const songUrl = getNextSong(interaction.guild.id);
-        if (!songUrl) {
+        const guildId = interaction.guild.id;
+        songUrl = getNextSong(guildId);
+        if (songUrl == undefined) {
             throw new Error('播放列表为空。');
         }
 
@@ -118,14 +122,18 @@ const playNextSong = async (interaction, connection) => {
 
         player.play(resource);
 
+        if (songUrl !== undefined) {
+            await interaction.reply(`正在播放：${songUrl}`);
+        }
+
         player.on('error', (error) => {
             console.error(`音频播放器错误：${error.message}`);
         });
 
-        await waitForIdleAndPlayNextSong(interaction, connection, songUrl);
+        await waitForIdleAndPlayNextSong(interaction);
     } catch (error) {
         if (error.message === '播放列表为空。') {
-            console.log('播放列表为空，請使用 /add 添加歌曲。');
+            console.log('播放列表为空，等待新歌曲加入。');
         } else {
             handleCommandError(interaction, error);
         }
@@ -133,37 +141,60 @@ const playNextSong = async (interaction, connection) => {
 };
 
 // 等待播放器空閒並播放下一首歌曲的函數
-const waitForIdleAndPlayNextSong = async (interaction, connection, songUrl) => {
+const waitForIdleAndPlayNextSong = async (interaction) => {
     await new Promise((resolve) => {
         player.once('idle', () => {
             if (player.state.status !== 'idle') {
                 player.stop();
             }
-            connection.destroy();
-            removeSong(interaction.guild.id, songUrl);
+            if (songUrl !== undefined && player.state.status == 'idle') {
+                removeSong(interaction.guild.id, songUrl);
+            }
             resolve();
+            if (songUrl !== undefined) {
+                playNextSong(interaction);
+            } else {
+                setTimeout(() => {
+                if (player.state.status == 'idle' && connection) {
+                connection.destroy();
+                }
+                }, 5 * 60 * 1000);  // 5 分钟的毫秒数
+                }
         });
     });
-
-    await playNextSong(interaction, null);
 };
 
 // 跳過到下一首歌曲的函數
-const skipToNextSong = async (interaction) => {
-    if (player.state.status !== 'idle') {
-        player.stop();
+const skipToNextSong = async () => {
+        if (player.state.status !== 'idle') {
+            player.stop();
+        }
+};
+
+// 停止播放的函數
+const stopPlaying = async (interaction) => {
+    try {
+        if (songUrl !== undefined) {
+            removeSong(interaction.guild.id, songUrl);
+            songUrl = undefined;
+        }
+        if (connection) {
+            connection.destroy();
+            connection = null;
+        }
+        if (player.state.status !== 'idle') {
+            player.stop();
+        }
+        await interaction.reply('Stopped playing.');
+    } catch (error) {
+        handleCommandError(interaction, error);
     }
-    if (connection) {
-        connection.disconnect();
-        connection = null;
-    }
-    await playNextSong(interaction);
 };
 
 // 新的錯誤處理函數
 const handleCommandError = (interaction, error) => {
     console.error(`Command error: ${error.message}`);
-    interaction.reply(`指令执行失败: ${error.message}`);
+    interaction.reply({ content: `指令执行失败: ${error.message}`, ephemeral: true });
 };
 
 export {
@@ -174,5 +205,6 @@ export {
     getNextSong,
     getPlaylist,
     waitForIdleAndPlayNextSong,
-    createVoiceConnection
+    createVoiceConnection,
+    stopPlaying,
 };

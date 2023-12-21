@@ -33,7 +33,7 @@ async function addToPlaylist(interaction) {
 
 // 定義 Slash Command
 export const data = new SlashCommandBuilder()
-    .setName('add')
+    .setName('music_add')
     .setDescription('Add a song to the playlist')
     .addStringOption(option =>
         option.setName('url')
