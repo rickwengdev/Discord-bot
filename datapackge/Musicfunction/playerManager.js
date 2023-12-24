@@ -1,9 +1,4 @@
-import {
-    createAudioPlayer,
-    createAudioResource,
-    joinVoiceChannel,
-    demuxProbe,
-} from '@discordjs/voice';
+import { createAudioPlayer, createAudioResource, joinVoiceChannel, demuxProbe } from '@discordjs/voice';
 import ytdl from 'ytdl-core';
 import fs from 'fs';
 
@@ -40,7 +35,7 @@ const removeSong = (guildId, songUrl) => {
 
     const songIndex = playlist.indexOf(songUrl);
     if (songIndex === -1) {
-        throw new Error('Song not found in playlist.');
+        throw new Error('歌曲未在播放清單中找到。');
     }
 
     playlist.splice(songIndex, 1);
@@ -49,8 +44,9 @@ const removeSong = (guildId, songUrl) => {
 
 // 向播放列表中添加歌曲的函數
 const addSong = (guildId, songUrl) => {
-    playlists.set(guildId, playlists.get(guildId) || []);
-    playlists.get(guildId).push(songUrl);
+    const playlist = playlists.get(guildId) || [];
+    playlist.push(songUrl);
+    playlists.set(guildId, playlist);
     savePlaylists();
 };
 
@@ -122,9 +118,9 @@ const playNextSong = async (interaction) => {
 
         player.play(resource);
 
-        if (songUrl !== undefined) {
-            await interaction.reply(`正在播放：${songUrl}`);
-        }
+        // if (songUrl !== undefined) {
+        //     await interaction.reply(`正在播放：${songUrl}`);
+        // }
 
         player.on('error', (error) => {
             console.error(`音频播放器错误：${error.message}`);
@@ -185,7 +181,7 @@ const stopPlaying = async (interaction) => {
         if (player.state.status !== 'idle') {
             player.stop();
         }
-        await interaction.reply('Stopped playing.');
+        await interaction.reply('已停止播放。');
     } catch (error) {
         handleCommandError(interaction, error);
     }
@@ -193,7 +189,7 @@ const stopPlaying = async (interaction) => {
 
 // 新的錯誤處理函數
 const handleCommandError = (interaction, error) => {
-    console.error(`Command error: ${error.message}`);
+    console.error(`指令错误: ${error.message}`);
     interaction.reply({ content: `指令执行失败: ${error.message}`, ephemeral: true });
 };
 
