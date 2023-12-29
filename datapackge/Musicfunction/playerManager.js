@@ -84,9 +84,7 @@ const createVoiceConnection = (interaction) => {
 };
 
 // 創建音頻流的函數
-const createStream = (songUrl) =>
-    ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 }
-);
+const createStream = (songUrl) => ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
 
 // 創建音頻資源的函數
 const createResource = async (stream) => {
@@ -104,7 +102,7 @@ const playNextSong = async (interaction) => {
 
         const guildId = interaction.guild.id;
         songUrl = getNextSong(guildId);
-        if (songUrl == undefined) {
+        if (songUrl === undefined) {
             throw new Error('播放列表为空。');
         }
 
@@ -118,9 +116,7 @@ const playNextSong = async (interaction) => {
 
         player.play(resource);
 
-        // if (songUrl !== undefined) {
-        //     await interaction.reply(`正在播放：${songUrl}`);
-        // }
+        // await interaction.reply(`正在播放：${songUrl}`);
 
         player.on('error', (error) => {
             console.error(`音频播放器错误：${error.message}`);
@@ -143,7 +139,7 @@ const waitForIdleAndPlayNextSong = async (interaction) => {
             if (player.state.status !== 'idle') {
                 player.stop();
             }
-            if (songUrl !== undefined && player.state.status == 'idle') {
+            if (songUrl !== undefined && player.state.status === 'idle') {
                 removeSong(interaction.guild.id, songUrl);
             }
             resolve();
@@ -151,20 +147,20 @@ const waitForIdleAndPlayNextSong = async (interaction) => {
                 playNextSong(interaction);
             } else {
                 setTimeout(() => {
-                if (player.state.status == 'idle' && connection) {
-                connection.destroy();
-                }
-                }, 5 * 60 * 1000);  // 5 分钟的毫秒数
-                }
+                    if (player.state.status === 'idle' && connection) {
+                        connection.destroy();
+                    }
+                }, 5 * 60 * 1000); // 5 分钟的毫秒数
+            }
         });
     });
 };
 
 // 跳過到下一首歌曲的函數
 const skipToNextSong = async () => {
-        if (player.state.status !== 'idle') {
-            player.stop();
-        }
+    if (player.state.status !== 'idle') {
+        player.stop();
+    }
 };
 
 // 停止播放的函數
