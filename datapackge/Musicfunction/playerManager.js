@@ -105,6 +105,9 @@ const playNextSong = async (interaction) => {
         if (songUrl === undefined) {
             throw new Error('播放列表为空。');
         }
+        
+        // 在添加新的错误监听器之前手动移除旧的监听器
+        player.off('error', handlePlayerError);
 
         if (!connection) {
             connection = createVoiceConnection(interaction);
