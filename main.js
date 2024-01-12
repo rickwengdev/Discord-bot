@@ -3,6 +3,7 @@ import { fileURLToPath } from 'node:url';
 import path, { dirname } from 'node:path';
 import { Client, Partials, Events, Collection, GatewayIntentBits } from 'discord.js';
 import dotenv from 'dotenv';
+import { addRoleFromReaction, removeRoleFromReaction } from './datapackge/modfunction/roleManager.js';
 
 dotenv.config();
 
@@ -11,7 +12,8 @@ const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
         GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildVoiceStates
+        GatewayIntentBits.GuildVoiceStates,
+        GatewayIntentBits.GuildMessageReactions,
     ],
     partials: [Partials.Message, Partials.Channel, Partials.Reaction]
 });
@@ -77,6 +79,22 @@ client.on(Events.InteractionCreate, async interaction => {
 // 客戶端準備好後輸出日誌
 client.once(Events.ClientReady, c => {
     console.log(`Ready! Logged in as ${c.user.tag}`);
+});
+
+client.on('messageReactionAdd', async (reaction, user) => {
+    const targetMessageId = '1194879627966029844';
+
+    if (reaction.message.id === targetMessageId) {
+        addRoleFromReaction(reaction, user);
+    }
+});
+
+client.on('messageReactionRemove', async (reaction, user) => {
+    const targetMessageId = '1194879627966029844';
+
+    if (reaction.message.id === targetMessageId) {
+        removeRoleFromReaction(reaction, user);
+    }
 });
 
 // 登錄到 Discord
