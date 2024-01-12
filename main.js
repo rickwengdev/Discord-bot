@@ -82,7 +82,7 @@ client.once(Events.ClientReady, c => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
-    const targetMessageId = '1194879627966029844';
+    const targetMessageId = 'YOUR_MESSAGE_ID_HERE';
 
     if (reaction.message.id === targetMessageId) {
         addRoleFromReaction(reaction, user);
@@ -90,7 +90,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
 });
 
 client.on('messageReactionRemove', async (reaction, user) => {
-    const targetMessageId = '1194879627966029844';
+    const targetMessageId = 'YOUR_MESSAGE_ID_HERE';
 
     if (reaction.message.id === targetMessageId) {
         removeRoleFromReaction(reaction, user);
