@@ -76,8 +76,8 @@
     {
     "emojis": [
       {
-        "emojiId": "984261247283363911",
-        "roleId": "1003922175927013416"
+        "emojiId": "your-emojiId",
+        "roleId": "your-roleId"
       }
     ]
     }
