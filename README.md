@@ -78,6 +78,10 @@
       {
         "emojiId": "your-emojiId",
         "roleId": "your-roleId"
+      },
+      {
+        "emojiId": "your-emojiId2",
+        "roleId": "your-roleId2"
       }
     ]
     }

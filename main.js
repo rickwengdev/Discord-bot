@@ -95,9 +95,11 @@ client.on('ready', () => {
     client.user.setPresence({ activities: [{ name: '死神塔' }], status: 'dnd' });
 });
 
+// 設置目標訊息 ID
+const targetMessageId = '1194879627966029844';
+
 // 處理訊息反應新增事件
 client.on('messageReactionAdd', async (reaction, user) => {
-    const targetMessageId = '1194879627966029844';
     if (reaction.message.id === targetMessageId) {
         addRoleFromReaction(reaction, user);
     }
@@ -105,7 +107,6 @@ client.on('messageReactionAdd', async (reaction, user) => {
 
 // 處理訊息反應移除事件
 client.on('messageReactionRemove', async (reaction, user) => {
-    const targetMessageId = '1194879627966029844';
     if (reaction.message.id === targetMessageId) {
         removeRoleFromReaction(reaction, user);
     }
