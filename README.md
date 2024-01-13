@@ -41,7 +41,7 @@
 
 ## 角色管理
 
-機器人根據用戶對特定訊息的反應管理角色。`main.js` 文件中包含了 `targetMessageId` 的配置，而 `roles.json` 文件則包含了 `emojiId` 對應到 `roleId` 的映射。`targetMessageId`為要監聽的指定訊息，用戶在這條訊息反應時則查詢`roles.json``emojiId`，如果有`emojiId`則給予對應的`roleId`。這設置允許機器人根據用戶對指定訊息的反應添加角色。
+機器人根據用戶對特定訊息的反應管理角色。`main.js` 文件中包含了 `targetMessageId` 的配置，而 `roles.json` 文件則包含了 `emojiId` 對應到 `roleId` 的映射。`targetMessageId`為要監聽的指定訊息，用戶在這條訊息反應時則查詢`roles.json`中的`emojis`，如果有`emojiId`則給予對應的`roleId`。這設置允許機器人根據用戶對指定訊息的反應添加角色。
 
 ## 機器人狀態配置
 
