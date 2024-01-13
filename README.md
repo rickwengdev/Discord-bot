@@ -87,7 +87,12 @@
     ```main.js
     client.user.setPresence({ activities: [{ name: '####' }], status: '####' });
     ```
-7. 使用以下命令運行機器人：
+7. 使用以下命令註冊斜線指令：
+
+    ```bash
+    node .deploy-commands.js
+    ```
+8. 使用以下命令運行機器人：
 
     ```bash
     node main.js
