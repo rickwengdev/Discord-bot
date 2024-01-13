@@ -176,12 +176,12 @@ const stopPlaying = async (interaction) => {
             removeSong(interaction.guild.id, songUrl);
             songUrl = undefined;
         }
+        if (player.state.status !== 'idle') {
+            player.stop();
+        }
         if (connection) {
             connection.destroy();
             connection = null;
-        }
-        if (player.state.status !== 'idle') {
-            player.stop();
         }
         await interaction.reply('已停止播放。');
     } catch (error) {
