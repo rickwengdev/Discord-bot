@@ -36,11 +36,11 @@
 
 ## 角色管理
 
-機器人根據用戶對特定訊息的反應管理角色。`main` 腳本中包含了 `targetMessageId` 的配置，而 `roles.json` 文件則包含了 `emojiId` 對應到 `roleId` 的映射。這設置允許機器人根據用戶對指定訊息的反應添加角色。
+機器人根據用戶對特定訊息的反應管理角色。`main.js` 文件中包含了 `targetMessageId` 的配置，而 `roles.json` 文件則包含了 `emojiId` 對應到 `roleId` 的映射。這設置允許機器人根據用戶對指定訊息的反應添加角色。
 
 ## 機器人狀態配置
 
-`main` 腳本包含了對 `client.on('ready', ...) `事件的修改，用於設置機器人的狀態。當前配置將機器人的活動設置為 "死神塔"，並將狀態設置為 "請勿打擾" (status: 'dnd')。您可以自定義此部分以設置所需的機器人狀態。
+`main.js` 文件包含了對 `client.on('ready', ...) `事件的修改，用於設置機器人的狀態。當前配置將機器人的活動設置為 "死神塔"，並將狀態設置為 "請勿打擾" (status: 'dnd')。您可以自定義此部分以設置所需的機器人狀態。
 
 ## 開始使用
 
@@ -52,6 +52,11 @@
 2. 安裝 Node.js 依賴。
 
    ```bash
+   npm install nodejs
+   ```
+3. 安裝 Bot 依賴。
+
+    ```bash
    npm install package.json
    ```
 3. 在項目根目錄中創建一個 `.env` 文件，並添加您的機器人令牌。
@@ -60,18 +65,33 @@
     token=your-bot-token
     clientId=your-clientid
     ```
-4. 在 main 腳本中配置機器人狀態和其他設置。
+4. 在 `main.js` 文件中配置 `targetMessageId`。
+
+    ```main.js
+    const targetMessageId = '1194879627966029844'
+    ```
+5. 在 `roles.js` 文件中配置 `emojiId` 和 `roleId` 。
+
+    ```roles.js
+    {
+    "emojis": [
+      {
+        "emojiId": "984261247283363911",
+        "roleId": "1003922175927013416"
+      }
+    ]
+  }
+    ```
+6. 在 `main.js` 文件中配置機器人狀態和其他設置。
 
     ```main.js
     client.user.setPresence({ activities: [{ name: '####' }], status: '####' });
     ```
-
-5. 使用以下命令運行機器人：
+7. 使用以下命令運行機器人：
 
     ```bash
     node main.js
     ```
-
 現在，機器人應已連接到您的 Discord 伺服器，準備提供音樂播放和管理功能。請確保機器人具有所需的權限（音樂、消息管理等）並選擇了正確的意圖（Intents）。
 
 ### 貢獻
