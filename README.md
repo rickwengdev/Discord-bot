@@ -68,7 +68,7 @@
 4. 在 `main.js` 文件中配置 `targetMessageId`。
 
     ```main.js
-    const targetMessageId = '1194879627966029844'
+    const targetMessageId = 'your-messageId'
     ```
 5. 在 `roles.js` 文件中配置 `emojiId` 和 `roleId` 。
 
