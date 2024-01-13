@@ -34,6 +34,8 @@
     - `message_number`（必填）：要刪除的訊息數量。
     - `reliable_vintage_model`（選填）：時間範圍超過兩週或訊息數量超過100。
 
+## 機器人指令
+
 - `/bot_test`
   - **描述**：機器人的測試指令。
 
