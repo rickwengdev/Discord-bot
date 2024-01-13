@@ -1,7 +1,3 @@
-Now Support Function:<br>
-  Music control(bug fixing)<br>
-  COCTRPG roll dice(bug fixing)<br>
-
 How to use:
   Music control:
     /add to add song(log in data lib with guild)
@@ -10,7 +6,4 @@ How to use:
     /showplaylist to show this server song play list
     /skip to skip current song
 
-  COCTRPG :
-    Bug fixing
-
-  pm2 start main.js --name "my-bot" --watch DISCORD-BOT
+wait sometime to updata readme
