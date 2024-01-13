@@ -1,33 +1,32 @@
-// 引入 Discord.js 相關模組
 import { createAudioPlayer, createAudioResource, joinVoiceChannel, demuxProbe } from '@discordjs/voice';
 import ytdl from 'ytdl-core';
 import fs from 'fs';
 
-// 全域變數，儲存各伺服器的播放列表
+// 全局變數，存儲各伺服器的播放列表
 let playlists = new Map();
 
-// 播放列表檔案路徑
+// 播放列表文件路徑
 const playlistPath = 'datapackge/musicfunction/playlists.json';
 
-// 將播放列表保存到檔案的函數
+// 將播放列表保存到文件的函數
 const savePlaylists = () => {
     const jsonObject = Object.fromEntries(playlists.entries());
     fs.writeFileSync(playlistPath, JSON.stringify(jsonObject));
 };
 
-// 從檔案中載入播放列表的函數
+// 從文件中加載播放列表的函數
 const loadPlaylists = () => {
     if (fs.existsSync(playlistPath)) {
         try {
             const data = fs.readFileSync(playlistPath, 'utf-8');
             playlists = new Map(Object.entries(JSON.parse(data)));
         } catch (err) {
-            console.error('解析 playlists.json 檔案失敗:', err);
+            console.error('Failed to parse playlists.json:', err);
         }
     }
 };
 
-// 從播放列表中移除歌曲的函數
+// 从播放列表中移除歌曲的函數
 const removeSong = (guildId, songUrl) => {
     const playlist = playlists.get(guildId);
     if (!playlist || playlist.length === 0) {
@@ -57,22 +56,22 @@ const getNextSong = (guildId) => (playlists.get(guildId) || [])[0];
 // 獲取整個播放列表的函數
 const getPlaylist = (guildId) => playlists.get(guildId) || [];
 
-// 從檔案載入播放列表
+// 從文件加載播放列表
 loadPlaylists();
 
-// 創建全域的音訊播放器
+// 創建全局的音頻播放器
 const player = createAudioPlayer();
 let connection = null;
 let songUrl = undefined;
 
-// 創建音訊連接的函數
+// 創建音頻連接的函數
 const createVoiceConnection = (interaction) => {
     const { guildId, member } = interaction;
     const voiceChannel = member?.voice?.channelId;
     const adapterCreator = interaction.guild.voiceAdapterCreator;
 
     if (!voiceChannel) {
-        throw new Error('您需要先加入一個語音頻道！');
+        throw new Error('您需要先加入一个语音频道！');
     }
 
     connection = joinVoiceChannel({
@@ -84,10 +83,10 @@ const createVoiceConnection = (interaction) => {
     return connection;
 };
 
-// 創建音訊串流的函數
+// 創建音頻流的函數
 const createStream = (songUrl) => ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
 
-// 創建音訊資源的函數
+// 創建音頻資源的函數
 const createResource = async (stream) => {
     const { stream: outputStream, type } = await demuxProbe(stream);
     return createAudioResource(outputStream, { inputType: type, channels: 2, inlineVolume: true });
@@ -98,16 +97,16 @@ const playNextSong = async (interaction) => {
     try {
         const voiceChannelId = interaction.member?.voice.channelId;
         if (!voiceChannelId) {
-            throw new Error('您需要先加入一個語音頻道！');
+            throw new Error('您需要先加入一个语音频道！');
         }
 
         const guildId = interaction.guild.id;
         songUrl = getNextSong(guildId);
         if (songUrl === undefined) {
-            throw new Error('播放列表為空。');
+            throw new Error('播放列表为空。');
         }
-        
-        // 在添加新的錯誤監聽器之前手動移除舊的監聽器
+
+        // 在添加新的错误监听器之前手动移除旧的监听器
         player.off('error', handlePlayerError);
 
         if (!connection) {
@@ -120,19 +119,24 @@ const playNextSong = async (interaction) => {
 
         player.play(resource);
 
-        player.on('error', (error) => {
-            console.error(`音訊播放器錯誤：${error.message}`);
-        });
+        // 重新添加新的错误监听器
+        player.on('error', handlePlayerError);
 
         await waitForIdleAndPlayNextSong(interaction);
     } catch (error) {
-        if (error.message === '播放列表為空。') {
-            console.log('播放列表為空，等待新歌曲加入。');
+        if (error.message === '播放列表为空。') {
+            console.log('播放列表为空，等待新歌曲加入。');
         } else {
             handleCommandError(interaction, error);
         }
     }
 };
+
+// 新的错误处理函数
+const handlePlayerError = (error) => {
+    console.error(`音频播放器错误：${error.message}`);
+};
+
 
 // 等待播放器空閒並播放下一首歌曲的函數
 const waitForIdleAndPlayNextSong = async (interaction) => {
@@ -152,7 +156,7 @@ const waitForIdleAndPlayNextSong = async (interaction) => {
                     if (player.state.status === 'idle' && connection) {
                         connection.destroy();
                     }
-                }, 5 * 60 * 1000); // 5 分鐘的毫秒數
+                }, 5 * 60 * 1000); // 5 分钟的毫秒数
             }
         });
     });
@@ -187,8 +191,8 @@ const stopPlaying = async (interaction) => {
 
 // 新的錯誤處理函數
 const handleCommandError = (interaction, error) => {
-    console.error(`指令錯誤: ${error.message}`);
-    interaction.reply({ content: `指令執行失敗: ${error.message}`, ephemeral: true });
+    console.error(`指令错误: ${error.message}`);
+    interaction.reply({ content: `指令执行失败: ${error.message}`, ephemeral: true });
 };
 
 export {
