@@ -35,7 +35,7 @@ function setupLogEvents(client) {
 
     // 監聽訊息刪除事件
     client.on('messageDelete', message => {
-        logEvent('訊息刪除', `可能是 **${message.author.tag}** 刪除了訊息， ID: ${message.id}`);
+        logEvent('訊息刪除', `可能是 **${message.author.tag}** 刪除了訊息， ID: ${message.id}`, message.content);
     });
 
     // 儲存用戶發送的訊息到 JSON 文件
@@ -74,14 +74,19 @@ function setupLogEvents(client) {
     }
 
     // 記錄事件到指定頻道
-    function logEvent(eventName, eventDescription) {
+    function logEvent(eventName, eventDescription, messageContent = null) {
         const logChannelID = process.env.logChannelID; // 記錄頻道的 ID
         const logChannel = client.channels.cache.get(logChannelID);
 
         if (logChannel) {
-            logChannel.send(`**[${getCurrentTimestamp()}] ${eventName}:** ${eventDescription}`);
+         let logMessage = `**[${getCurrentTimestamp()}] ${eventName}:** ${eventDescription}`;
+          if (messageContent) {
+            logMessage += `\n**刪除的訊息內容:** ${messageContent}`;
+           }
+
+        logChannel.send(logMessage);
         } else {
-            console.error('未找到記錄頻道。');
+        console.error('未找到記錄頻道。');
         }
     }
 
