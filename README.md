@@ -135,12 +135,12 @@
     leaveChannelID=your-leaveChannel-id
     ```
   2. 在 `main.js` 中配置文本訊息
-    guildMemberAdd
+    `guildMemberAdd`
     ```main.js
     .setTitle(`## ${member.user.tag} ######`)
     .setDescription(`${member.user.toString()}######`)
     ```
-    guildMemberRemove
+    `guildMemberRemove`
     ```main.js
     leaveChannel.send(`**${member.user.tag}** ######。`);
     ```
