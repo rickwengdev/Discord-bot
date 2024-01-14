@@ -10,10 +10,10 @@ async function viewPlaylist(interaction) {
 
     if (playlist.length === 0) {
         // 若播放列表為空，回覆訊息
-        await interaction.reply('The playlist is empty.');
+        await interaction.reply('播放列表是空的。');
     } else {
         // 若有歌曲，回覆播放列表內容
-        await interaction.reply('The playlist is:\n' + playlist.join('\n'));
+        await interaction.reply('播放列表:\n' + playlist.join('\n'));
     }
 }
 

@@ -9,4 +9,6 @@ export const data = new SlashCommandBuilder()
 // 执行 slash command 的函數
 export async function execute() {
     await skipToNextSong();
+    console.log(`${interaction.user.username} 已跳轉到下一首歌曲。}`);
+    interaction.reply('播放下一首歌曲。');
 }

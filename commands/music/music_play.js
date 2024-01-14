@@ -16,4 +16,5 @@ export async function execute(interaction) {
 
         // 在 playerManager.js 中處理連接和播放
         playNextSong(interaction);
+        interaction.reply('Play song.');
 }

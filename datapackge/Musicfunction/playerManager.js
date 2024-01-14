@@ -2,10 +2,7 @@ import { createAudioPlayer, createAudioResource, joinVoiceChannel, demuxProbe } 
 import ytdl from 'ytdl-core';
 import fs from 'fs';
 
-// 全局變數，存儲各伺服器的播放列表
 let playlists = new Map();
-
-// 播放列表文件路徑
 const playlistPath = 'datapackge/musicfunction/playlists.json';
 
 // 將播放列表保存到文件的函數
@@ -21,7 +18,7 @@ const loadPlaylists = () => {
             const data = fs.readFileSync(playlistPath, 'utf-8');
             playlists = new Map(Object.entries(JSON.parse(data)));
         } catch (err) {
-            console.error('Failed to parse playlists.json:', err);
+            console.error('解析播放列表失败:', err);
         }
     }
 };
@@ -74,6 +71,10 @@ const createVoiceConnection = (interaction) => {
         throw new Error('您需要先加入一个语音频道！');
     }
 
+    // 在此处添加获取用户信息的例子
+    const user = interaction.user;
+    console.log(`使用者名稱: ${user.username}, 使用者ID: ${user.id}, 頻道ID: ${voiceChannel}`);
+
     connection = joinVoiceChannel({
         channelId: voiceChannel,
         guildId: guildId,
@@ -84,7 +85,11 @@ const createVoiceConnection = (interaction) => {
 };
 
 // 創建音頻流的函數
-const createStream = (songUrl) => ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
+const createStream = (songUrl) => {
+    // 在此处添加创建音频流的例子
+    console.log(`創建音頻流：${songUrl}`);
+    return ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
+};
 
 // 創建音頻資源的函數
 const createResource = async (stream) => {
@@ -110,6 +115,7 @@ const playNextSong = async (interaction) => {
         player.off('error', handlePlayerError);
 
         if (!connection) {
+            // 加入语音频道
             connection = createVoiceConnection(interaction);
             connection.subscribe(player);
         }
@@ -117,6 +123,8 @@ const playNextSong = async (interaction) => {
         const stream = createStream(songUrl);
         const resource = await createResource(stream);
 
+        // 在此处添加播放音频的例子
+        console.log(`播放音頻：${songUrl}`);
         player.play(resource);
 
         // 重新添加新的错误监听器
@@ -124,6 +132,7 @@ const playNextSong = async (interaction) => {
 
         await waitForIdleAndPlayNextSong(interaction);
     } catch (error) {
+        console.error('播放下一首歌曲时发生错误:', error);
         if (error.message === '播放列表为空。') {
             console.log('播放列表为空，等待新歌曲加入。');
         } else {
@@ -131,12 +140,6 @@ const playNextSong = async (interaction) => {
         }
     }
 };
-
-// 新的错误处理函数
-const handlePlayerError = (error) => {
-    console.error(`音频播放器错误：${error.message}`);
-};
-
 
 // 等待播放器空閒並播放下一首歌曲的函數
 const waitForIdleAndPlayNextSong = async (interaction) => {
@@ -155,6 +158,7 @@ const waitForIdleAndPlayNextSong = async (interaction) => {
                 setTimeout(() => {
                     if (player.state.status === 'idle' && connection) {
                         connection.destroy();
+                        console.log(`播放器空閒，已離開語音頻道 ${interaction.voiceChannel}。`);
                     }
                 }, 5 * 60 * 1000); // 5 分钟的毫秒数
             }
@@ -172,6 +176,7 @@ const skipToNextSong = async () => {
 // 停止播放的函數
 const stopPlaying = async (interaction) => {
     try {
+        console.log(`使用者 ${interaction.user.username} 已停止播放。`);
         if (songUrl !== undefined) {
             removeSong(interaction.guild.id, songUrl);
             songUrl = undefined;
@@ -187,6 +192,11 @@ const stopPlaying = async (interaction) => {
     } catch (error) {
         handleCommandError(interaction, error);
     }
+};
+
+// 新的错误处理函数
+const handlePlayerError = (error) => {
+    console.error(`音频播放器错误：${error.message}`);
 };
 
 // 新的錯誤處理函數

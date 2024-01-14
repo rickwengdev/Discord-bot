@@ -20,7 +20,7 @@ export async function execute(interaction) {
     const messageNumber = interaction.options.getInteger('message_number') + 1;
     let timeRangeBig = interaction.options.getBoolean('reliable_vintage_model');
     
-    // 如果未提供可靠的歷史模式選項，預設為 true
+    // 如果未提供模式選項，預設為 true
     if (timeRangeBig === null) timeRangeBig = true;
 
     // 呼叫刪除訊息的自訂函數
