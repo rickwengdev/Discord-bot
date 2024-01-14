@@ -135,14 +135,70 @@
     leaveChannelID=your-leaveChannel-id
     ```
   2. 在 `main.js` 中配置文本訊息
+    guildMemberAdd
     ```main.js
     .setTitle(`## ${member.user.tag} ######`)
     .setDescription(`${member.user.toString()}######`)
+    ```
+    guildMemberRemove
+    ```main.js
+    leaveChannel.send(`**${member.user.tag}** ######。`);
     ```
   3. 自訂歡迎橫幅，將橫幅放到機器人根目錄並將其命名為 `welcome-banner.png` ，如果不需要橫幅將其刪除即可。
 
 - 日誌紀錄
   1. 在 `.env` 中配置 `logChannelID` 
+  ```.env
+  logChannelID=your-logChannel-id
+  ```
+  2. 如果不需要文字紀錄功能可將以下刪除，以減小空間使用
+  ```log.js
+      // 監聽訊息創建事件
+    client.on('messageCreate', message => {
+        // 儲存用戶發送的訊息到 JSON 文件
+        saveUserMessage(message);
+    });
+
+    // 監聽訊息刪除事件
+    client.on('messageDelete', message => {
+        logEvent('訊息刪除', `**${message.author.tag}** 刪除了訊息 ID: ${message.id}`);
+    });
+
+    // 儲存用戶發送的訊息到 JSON 文件
+    function saveUserMessage(message) {
+        // 如果訊息內容為空，不進行儲存
+        if (!message.content) {
+            console.log('Received a message with empty content. Skipping save.');
+            return;
+        }
+    
+        // 加載 JSON 文件中的數據
+        messagesData = loadMessagesData();
+    
+        // Debug 訊息
+        console.log('Received message:', message);
+    
+        // 儲存用戶發送的訊息
+        messagesData.userMessages.push({
+            author: message.author.tag,
+            content: message.content,
+            timestamp: message.createdTimestamp,
+        });
+    
+        // 寫入更新後的數據到 JSON 文件
+        fs.writeFileSync(messagesFilePath, JSON.stringify(messagesData, null, 2));
+    }
+
+    // 加載 JSON 文件中的數據
+    function loadMessagesData() {
+        try {
+            // 讀取 JSON 文件中的數據，如果文件不存在則創建一個空的數據結構
+            return JSON.parse(fs.readFileSync(messagesFilePath, 'utf-8'));
+        } catch (error) {
+            return { userMessages: [] };
+        }
+    }
+  ```
 
 ### 貢獻
 
