@@ -7,7 +7,7 @@ export const data = new SlashCommandBuilder()
     .setDescription('跳轉到下一首歌曲');
 
 // 执行 slash command 的函數
-export async function execute() {
+export async function execute(interaction) {
     await skipToNextSong();
     console.log(`${interaction.user.username} 已跳轉到下一首歌曲。}`);
     interaction.reply('播放下一首歌曲。');
