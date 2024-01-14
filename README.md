@@ -1,6 +1,7 @@
 # Discord 音樂和管理機器人
 
 此 Discord 機器人旨在提供音樂播放和基礎管理功能。以下是可用的指令和功能。
+Discord.js v14
 
 ## 音樂指令(目前僅支援Youtube)
 
@@ -91,12 +92,12 @@
     ```main.js
     client.user.setPresence({ activities: [{ name: '####' }], status: '####' });
     ```
-7. 使用以下命令註冊斜線指令：
+6. 使用以下命令註冊斜線指令：
 
     ```bash
     node .deploy-commands.js
     ```
-8. 使用以下命令運行機器人：
+7. 使用以下命令運行機器人：
 
     ```bash
     node main.js
@@ -130,12 +131,14 @@
 
 - 歡迎訊息
   1. 在 `.env` 中添加 `welcomeChannelID` 和 `leaveChannelID`
+
     ```.env
     welcomeChannelID=your-welcomeChannel-id
     leaveChannelID=your-leaveChannel-id
     ```
   2. 在 `main.js` 中配置文本訊息
     `guildMemberAdd`
+
     ```main.js
     .setTitle(`## ${member.user.tag} ######`)
     .setDescription(`${member.user.toString()}######`)
@@ -148,10 +151,12 @@
 
 - 日誌紀錄
   1. 在 `.env` 中配置 `logChannelID` 
+
   ```.env
   logChannelID=your-logChannel-id
   ```
   2. 如果不需要文字紀錄功能可將以下刪除，以減小空間使用
+  
   ```log.js
       // 監聽訊息創建事件
     client.on('messageCreate', message => {
