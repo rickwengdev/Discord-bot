@@ -26,13 +26,16 @@ const loadPlaylists = () => {
 // 从播放列表中移除歌曲的函數
 const removeSong = (guildId, songUrl) => {
     const playlist = playlists.get(guildId);
+    
     if (!playlist || playlist.length === 0) {
-        throw new Error('播放清單為空，無法刪除歌曲。');
+        console.log('播放清單為空，無法刪除歌曲。');
+        return; // 不再执行后续代码，直接返回
     }
 
     const songIndex = playlist.indexOf(songUrl);
     if (songIndex === -1) {
-        throw new Error('歌曲未在播放清單中找到。');
+        console.log('歌曲未在播放清單中找到。');
+        return; // 不再执行后续代码，直接返回
     }
 
     playlist.splice(songIndex, 1);
