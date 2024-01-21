@@ -35,7 +35,7 @@ function setupLogEvents(client) {
 
     // 監聽訊息刪除事件
     client.on('messageDelete', message => {
-        logEvent('訊息刪除', `可能是 **${message.author.tag}** 刪除了訊息， ID: ${message.id}`, message.content);
+        logEvent('訊息刪除', `可能是 **${message.author ? message.author.tag : '未知用户'}** 刪除了訊息， ID: ${message.id}`, message.content);
     });
 
     // 儲存用戶發送的訊息到 JSON 文件
