@@ -147,23 +147,31 @@ const playNextSong = async (interaction) => {
 // 等待播放器空閒並播放下一首歌曲的函數
 const waitForIdleAndPlayNextSong = async (interaction) => {
     await new Promise((resolve) => {
+        let songUrl2
         player.once('idle', () => {
+            console.log('播放器空閒，播放下一首歌曲。');
             if (player.state.status !== 'idle') {
                 player.stop();
             }
             if (songUrl !== undefined && player.state.status === 'idle') {
                 removeSong(interaction.guild.id, songUrl);
+                songUrl2 = getNextSong(interaction.guild.id);
             }
             resolve();
-            if (songUrl !== undefined) {
+            if (songUrl2 !== undefined) {
                 playNextSong(interaction);
             } else {
-                setTimeout(() => {
-                    if (player.state.status === 'idle' && connection) {
+                // 如果播放列表为空，断开语音连接
+                console.log('播放列表为空，断开语音连接計時。');
+                timeoutid = setTimeout(() => {
+                    if (player.state.status === 'idle' && playlists.get(interaction.guild.id).length === 0) {
+                        console.log('播放列表为空，断开语音连接。');
                         connection.destroy();
-                        console.log(`播放器空閒，已離開語音頻道 ${interaction.voiceChannel}。`);
+                        connection = null;
+                    }else {
+                        console.log('播放列表不为空，不断开语音连接。');
                     }
-                }, 5 * 60 * 1000); // 5 分钟的毫秒数
+                }, 5 * 60 * 1000); // 300 秒后断开连接
             }
         });
     });

@@ -50,7 +50,7 @@ function setupLogEvents(client) {
         messagesData = loadMessagesData();
     
         // Debug 訊息
-        console.log('Received message:', message);
+        console.log('Received message:', message.content);
     
         // 儲存用戶發送的訊息
         messagesData.userMessages.push({

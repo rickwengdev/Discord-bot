@@ -111,8 +111,5 @@ messageReaction(client);
 // 設置用戶加入伺服器事件
 guildMember(client);
 
-// 設置自動專屬語音頻道創建事件
-autoCreateVoiceChannel(client);
-
 // 登錄到 Discord
 client.login(process.env.token);
