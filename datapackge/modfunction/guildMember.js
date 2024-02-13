@@ -4,8 +4,12 @@ dotenv.config();
 
 // 引入所需的模組
 import fs from 'fs';
-import path from 'path';
+import path , {dirname} from 'path';
 import { EmbedBuilder, AttachmentBuilder } from 'discord.js'
+import { fileURLToPath } from 'node:url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 function guildMember(client){
 //用戶加入伺服器訊息
@@ -19,11 +23,11 @@ client.on('guildMemberAdd', async member => {
     if (welcomeChannel) {
         try {
             // 建立一個 EmbedBuilder
+            console.log(welcomeChannelID)
             const embed = new EmbedBuilder()
                 .setTitle(`歡迎 ${member.user.tag} 加入我們的伺服器！`)
                 .setDescription(`${member.user.toString()}真是機車🛵歡迎你！`)
                 .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: 'png', size: 256 }));
-
             if (!bannerBuffer) {
                 console.log('未找到歡迎橫幅。');
                 // 在歡迎消息中添加一個 EmbedBuilder
@@ -41,9 +45,9 @@ client.on('guildMemberAdd', async member => {
 });
 
 //用戶離開伺服器訊息
-client.on('guildMemberRemove', member => {
+client.on('guildMemberRemove', async member => {
     const leaveChannelID = process.env.leaveChannelID; // 請更換為你的目標頻道的ID
-    const leaveChannel = member.guild.channels.cache.get(leaveChannelID);
+    const leaveChannel = client.channels.cache.get(leaveChannelID);
 
     if (leaveChannel) {
         try {

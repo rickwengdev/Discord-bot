@@ -74,12 +74,12 @@ function setupLogEvents(client) {
     }
 
     // 記錄事件到指定頻道
-    function logEvent(eventName, eventDescription, messageContent = null) {
+    function logEvent(interaction, eventDescription, messageContent = null) {
         const logChannelID = process.env.logChannelID; // 記錄頻道的 ID
         const logChannel = client.channels.cache.get(logChannelID);
 
         if (logChannel) {
-         let logMessage = `**[${getCurrentTimestamp()}] ${eventName}:** ${eventDescription}`;
+         let logMessage = `**[${getCurrentTimestamp()}] ${interaction}:** ${eventDescription}`;
           if (messageContent) {
             logMessage += `\n**刪除的訊息內容:** ${messageContent}`;
            }
