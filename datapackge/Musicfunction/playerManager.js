@@ -150,15 +150,12 @@ const waitForIdleAndPlayNextSong = async (interaction) => {
         let songUrl2
         player.once('idle', () => {
             console.log('播放器空閒，播放下一首歌曲。');
-            if (player.state.status !== 'idle') {
-                player.stop();
-            }
             if (songUrl !== undefined && player.state.status === 'idle') {
                 removeSong(interaction.guild.id, songUrl);
                 songUrl2 = getNextSong(interaction.guild.id);
             }
             resolve();
-            if (songUrl2 !== undefined) {
+            if (songUrl2 !== undefined){
                 playNextSong(interaction);
             } else {
                 // 如果播放列表为空，断开语音连接
@@ -196,7 +193,6 @@ const stopPlaying = async (interaction) => {
             player.stop();
         }
         if (connection) {
-            connection.destroy();
             connection = null;
         }
         await interaction.reply('已停止播放。');

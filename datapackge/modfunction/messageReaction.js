@@ -21,6 +21,32 @@ client.on('messageReactionRemove', async (reaction, user) => {
         removeRoleFromReaction(reaction, user);
     }
 });
+
+client.on('messageReactionAdd', async (reaction, user) => {
+    const targetMessageId2 = "1194879627966029844"
+    const guild = reaction.message.guild;
+    const member = guild.members.cache.get(user.id);
+    if (reaction.message.id === targetMessageId2) {
+        const roleId = "1003922175927013416"
+        const role = guild.roles.cache.get(roleId);
+        if (role) {
+            member.roles.add(role);
+        }
+    }
+});
+
+client.on('messageReactionRemove', async (reaction, user) => {
+    const targetMessageId2 = "1194879627966029844"
+    const guild = reaction.message.guild;
+    const member = guild.members.cache.get(user.id);
+    if (reaction.message.id === targetMessageId2) {
+        const roleId = "1003922175927013416"
+        const role = guild.roles.cache.get(roleId);
+        if (role) {
+            member.roles.remove(role);
+        }
+    }
+});
 }
 
 export {

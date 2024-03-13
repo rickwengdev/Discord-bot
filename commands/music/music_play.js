@@ -12,9 +12,10 @@ export async function execute(interaction) {
         if (interaction.deferred || interaction.replied) {
             console.log('Interaction already acknowledged.');
             return;
+        } else {
+            interaction.reply('Play song.');
         }
 
         // 在 playerManager.js 中處理連接和播放
         playNextSong(interaction);
-        interaction.reply('Play song.');
 }
