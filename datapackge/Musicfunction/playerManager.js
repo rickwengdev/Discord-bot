@@ -61,7 +61,7 @@ loadPlaylists();
 
 // 創建全局的音頻播放器
 const player = createAudioPlayer();
-let connection = null;
+let connection = undefined;
 let songUrl = undefined;
 
 // 創建音頻連接的函數
@@ -194,7 +194,7 @@ const stopPlaying = async (interaction) => {
         if (connection) {
             connection = undefined;
         }
-        await interaction.reply('已停止播放。');
+        await interaction.followUp('已停止播放。');
     } catch (error) {
         handleCommandError(interaction, error);
     }
