@@ -163,8 +163,7 @@ const waitForIdleAndPlayNextSong = async (interaction) => {
                 setTimeout(() => {
                     if (player.state.status === 'idle' && playlists.get(interaction.guild.id).length === 0) {
                         console.log('播放列表为空，断开语音连接。');
-                        connection.destroy();
-                        connection = null;
+                        stopPlaying(interaction);
                     }else {
                         console.log('播放列表不为空，不断开语音连接。');
                     }
@@ -193,7 +192,7 @@ const stopPlaying = async (interaction) => {
             player.stop();
         }
         if (connection) {
-            connection = null;
+            connection = undefined;
         }
         await interaction.reply('已停止播放。');
     } catch (error) {
