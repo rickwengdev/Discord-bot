@@ -165,7 +165,7 @@ const waitForIdleAndPlayNextSong = async (interaction) => {
                         console.log('播放列表为空，断开语音连接。');
                         stopPlaying(interaction);
                     }else {
-                        console.log('播放列表不为空，不断开语音连接。');
+                        console.log('忽略。');
                     }
                 }, 5 * 60 * 1000); // 300 秒后断开连接
             }
