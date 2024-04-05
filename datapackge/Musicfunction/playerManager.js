@@ -66,25 +66,31 @@ let songUrl = undefined;
 
 // 創建音頻連接的函數
 const createVoiceConnection = (interaction) => {
-    const { guildId, member } = interaction;
-    const voiceChannel = member?.voice?.channelId;
-    const adapterCreator = interaction.guild.voiceAdapterCreator;
+    try {
+        const { guildId, member } = interaction;
+        const voiceChannel = member?.voice?.channelId;
+        const adapterCreator = interaction.guild.voiceAdapterCreator;
 
-    if (!voiceChannel) {
-        throw new Error('您需要先加入一个语音频道！');
+        if (!voiceChannel) {
+            throw new Error('您需要先加入一个语音频道！');
+        }
+
+        // 在此處添加獲取用戶信息的例子
+        const user = interaction.user;
+        console.log(`使用者名稱: ${user.username}, 使用者ID: ${user.id}, 頻道ID: ${voiceChannel}`);
+
+        connection = joinVoiceChannel({
+            channelId: voiceChannel,
+            guildId: guildId,
+            adapterCreator: adapterCreator,
+        });
+
+        return connection;
+    } catch (error) {
+        console.error(`創建音頻連接時發生錯誤: ${error.message}`);
+        // 考慮在這裡給用戶發送錯誤消息
+        handleCommandError(interaction, error);
     }
-
-    // 在此处添加获取用户信息的例子
-    const user = interaction.user;
-    console.log(`使用者名稱: ${user.username}, 使用者ID: ${user.id}, 頻道ID: ${voiceChannel}`);
-
-    connection = joinVoiceChannel({
-        channelId: voiceChannel,
-        guildId: guildId,
-        adapterCreator: adapterCreator,
-    });
-
-    return connection;
 };
 
 // 創建音頻流的函數
