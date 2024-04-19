@@ -112,7 +112,7 @@ Discord.js v14
 - 角色管理
   1. 在 `.env` 文件中配置 `targetMessageId`。
 
-    ```
+    ```.env
     targetMessageId=your-messageId
     ```
   2. 在 `roles.js` 文件中配置 `emojiId` 和 `roleId` 。
@@ -147,6 +147,7 @@ Discord.js v14
     .setDescription(`${member.user.toString()}######`)
     ```
     `guildMemberRemove`
+    
     ```main.js
     leaveChannel.send(`**${member.user.tag}** ######。`);
     ```
