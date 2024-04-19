@@ -19,24 +19,24 @@ const loadPlaylists = () => {
             const data = fs.readFileSync(playlistPath, 'utf-8');
             playlists = new Map(Object.entries(JSON.parse(data)));
         } catch (err) {
-            console.error('解析播放列表失败:', err);
+            console.error('解析播放列表失敗:', err);
         }
     }
 };
 
-// 从播放列表中移除歌曲的函數
+// 從播放列表中移除歌曲的函數
 const removeSong = (guildId, songUrl) => {
     const playlist = playlists.get(guildId);
     
     if (!playlist || playlist.length === 0) {
-        console.log('播放清單為空，無法刪除歌曲。');
-        return; // 不再执行后续代码，直接返回
+        console.log('播放列表為空，無法刪除歌曲。');
+        return; // 不再執行後續代碼，直接返回
     }
 
     const songIndex = playlist.indexOf(songUrl);
     if (songIndex === -1) {
-        console.log('歌曲未在播放清單中找到。');
-        return; // 不再执行后续代码，直接返回
+        console.log('歌曲未在播放列表中找到。');
+        return; // 不再執行後續代碼，直接返回
     }
 
     playlist.splice(songIndex, 1);
@@ -60,7 +60,7 @@ const getPlaylist = (guildId) => playlists.get(guildId) || [];
 // 從文件加載播放列表
 loadPlaylists();
 
-// 創建全局的音頻播放器
+// 創建全球的音頻播放器
 const player = createAudioPlayer();
 let connection = undefined;
 let songUrl = undefined;
@@ -73,7 +73,7 @@ const createVoiceConnection = (interaction) => {
         const adapterCreator = interaction.guild.voiceAdapterCreator;
 
         if (!voiceChannel) {
-            throw new Error('您需要先加入一个语音频道！');
+            throw new Error('您需要先加入一個語音頻道！');
         }
 
         // 在此處添加獲取用戶信息的例子
@@ -96,7 +96,7 @@ const createVoiceConnection = (interaction) => {
 
 // 創建音頻流的函數
 const createStream = (songUrl) => {
-    // 在此处添加创建音频流的例子
+    // 在此處添加創建音頻流的例子
     console.log(`創建音頻流：${songUrl}`);
     return ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
 };
@@ -112,20 +112,20 @@ const playNextSong = async (interaction) => {
     try {
         const voiceChannelId = interaction.member?.voice.channelId;
         if (!voiceChannelId) {
-            throw new Error('您需要先加入一个语音频道！');
+            throw new Error('您需要先加入一個語音頻道！');
         }
 
         const guildId = interaction.guild.id;
         songUrl = getNextSong(guildId);
         if (songUrl === undefined) {
-            throw new Error('播放列表为空。');
+            throw new Error('播放列表為空。');
         }
 
-        // 在添加新的错误监听器之前手动移除旧的监听器
+        // 在添加新的錯誤監聽器之前手動移除舊的監聽器
         player.off('error', handlePlayerError);
 
         if (!connection) {
-            // 加入语音频道
+            // 加入語音頻道
             connection = createVoiceConnection(interaction);
             connection.subscribe(player);
         }
@@ -133,18 +133,18 @@ const playNextSong = async (interaction) => {
         const stream = createStream(songUrl);
         const resource = await createResource(stream);
 
-        // 在此处添加播放音频的例子
+        // 在此處添加播放音頻的例子
         console.log(`播放音頻：${songUrl}`);
         player.play(resource);
 
-        // 重新添加新的错误监听器
+        // 重新添加新的錯誤監聽器
         player.on('error', handlePlayerError);
 
         await waitForIdleAndPlayNextSong(interaction);
     } catch (error) {
-        console.error('播放下一首歌曲时发生错误:', error);
-        if (error.message === '播放列表为空。') {
-            console.log('播放列表为空，等待新歌曲加入。');
+        console.error('播放下一首歌曲時發生錯誤:', error);
+        if (error.message === '播放列表為空。') {
+            console.log('播放列表為空，等待新歌曲加入。');
         } else {
             handleCommandError(interaction, error);
         }
@@ -165,16 +165,16 @@ const waitForIdleAndPlayNextSong = async (interaction) => {
             if (songUrl2 !== undefined){
                 playNextSong(interaction);
             } else {
-                // 如果播放列表为空，断开语音连接
-                console.log('播放列表为空，断开语音连接計時。');
+                // 如果播放列表為空，斷開語音連接計時。
+                console.log('播放列表為空，斷開語音連接。');
                 setTimeout(() => {
                     if (player.state.status === 'idle' && playlists.get(interaction.guild.id).length === 0) {
-                        console.log('播放列表为空，断开语音连接。');
+                        console.log('播放列表為空，斷開語音連接。');
                         stopPlaying(interaction);
                     }else {
                         console.log('忽略。');
                     }
-                }, 5 * 60 * 1000); // 300 秒后断开连接
+                }, 5 * 60 * 1000); // 300 秒後斷開連接
             }
         });
     });
@@ -207,27 +207,27 @@ const stopPlaying = async (interaction) => {
     }
 };
 
-// 新的错误处理函数
+// 新的錯誤處理函數
 const handlePlayerError = (error) => {
-    console.error(`音频播放器错误：${error.message}`);
+    console.error(`音頻播放器錯誤：${error.message}`);
 };
 
 // 新的錯誤處理函數
 const handleCommandError = (interaction, error) => {
-    console.error(`指令错误: ${error.message}`);
-    interaction.reply({ content: `指令执行失败: ${error.message}`, ephemeral: true });
+    console.error(`指令錯誤: ${error.message}`);
+    interaction.reply({ content: `指令執行失敗: ${error.message}`, ephemeral: true });
 };
 
-// 下载歌曲的函数
+// 下载歌曲的函數
 const downloadSong = async (interaction, url) => {
     const dir = './downloads';
     if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir, { recursive: true });
     }
 
-    const audioPath = './downloads/song.mp3';  // 定义文件路径
+    const audioPath = './downloads/song.wav';  // 定義文件路徑
 
-    // 检查文件是否存在，如果存在则删除
+    // 檢查文件是否存在，如果存在則刪除
     if (fs.existsSync(audioPath)) {
         await fs.promises.unlink(audioPath);
     }
@@ -235,8 +235,8 @@ const downloadSong = async (interaction, url) => {
     try {
         await interaction.deferReply();
         const download = ytdl(url, { 
-            quality: 'highestaudio',  // 选择最高音频质量
-            filter: 'audioonly'       // 过滤只下载音频流
+            quality: 'highestaudio',  // 選擇最高音頻質量
+            filter: 'audioonly'       // 過濾只下載音頻流
         });
         const writedownload = fs.createWriteStream(audioPath);
 
@@ -256,8 +256,8 @@ const downloadSong = async (interaction, url) => {
                 if (percentage - lastPercentage >= 5) {
                     lastPercentage = percentage;
                     const progressEmbed = new EmbedBuilder()
-                        .setTitle('下载进度')
-                        .setDescription(`当前下载进度：${percentage}%`);
+                        .setTitle('下載進度')
+                        .setDescription(`當前下載進度：${percentage}%`);
 
                     interaction.editReply({ embeds: [progressEmbed] }).catch(console.error);
                 }
@@ -267,29 +267,25 @@ const downloadSong = async (interaction, url) => {
         download.pipe(writedownload);
 
         writedownload.on('finish', async () => {
-            console.log('下载完成');
+            console.log('下載完成');
             const fileBuffer = await fs.promises.readFile(audioPath);
             const attachment = new AttachmentBuilder(fileBuffer, { name: 'song.mp3' });
 
             const embed = new EmbedBuilder()
-                .setTitle('文件下载完成')
-                .setDescription('这是您下载的音频文件');
+                .setTitle('文件下載完成')
+                .setDescription('這是您下載的音頻文件');
 
-            await interaction.followUp({ content: '这里是您的音频文件:', files: [attachment], embeds: [embed] })
+            await interaction.editReply({ content: '這裡是您的音頻文件:', files: [attachment], embeds: [embed] })
                 .catch(error => {
-                    console.error(`发送文件时出错: ${error.message}`);
+                    console.error(`發送文件時出錯: ${error.message}`);
                 });
         });
         
     } catch (error) {
-        console.error(`下载音频时出错: ${error.message}`);
-        await interaction.followUp({ content: `下载音频失败: ${error.message}` });
+        console.error(`下載音頻時出錯: ${error.message}`);
+        await interaction.editReply({ content: `下載音頻失敗: ${error.message}` });
     }
 };
-
-
-
-
 
 export {
     playNextSong,

@@ -27,6 +27,9 @@ Discord.js v14
 - `/music_stop`
   - **描述**：停止播放當前歌曲。
 
+- `/music_download`
+  - **描述**：下載歌曲。
+
 ## 管理指令
 
 - `/mod_del_message`
