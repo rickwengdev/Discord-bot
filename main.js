@@ -1,5 +1,6 @@
 // 引入 Node.js 模組
 import fs from 'node:fs';
+import { readdirSync, statSync } from 'fs';
 import { fileURLToPath } from 'node:url';
 import path, { dirname } from 'node:path';
 
@@ -43,13 +44,16 @@ const __dirname = dirname(__filename);
 // 定義命令文件夾的路徑
 const foldersPath = path.join(__dirname, 'commands');
 
-// 獲取所有命令文件夾
-const commandFolders = fs.readdirSync(foldersPath);
+// 獲取所有命令文件夾，並確保只讀取目錄
+const commandFolders = readdirSync(foldersPath).filter(folder => {
+    const folderPath = path.join(foldersPath, folder);
+    return statSync(folderPath).isDirectory();
+});
 
 // 加載所有命令文件
 for (const folder of commandFolders) {
     const commandsPath = path.join(foldersPath, folder);
-    const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+    const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js') && statSync(path.join(commandsPath, file)).isFile());
 
     // 遍歷每個命令文件
     for (const file of commandFiles) {

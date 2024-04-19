@@ -1,4 +1,5 @@
 import { createAudioPlayer, createAudioResource, joinVoiceChannel, demuxProbe } from '@discordjs/voice';
+import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
 import ytdl from 'ytdl-core';
 import fs from 'fs';
 
@@ -217,6 +218,79 @@ const handleCommandError = (interaction, error) => {
     interaction.reply({ content: `指令执行失败: ${error.message}`, ephemeral: true });
 };
 
+// 下载歌曲的函数
+const downloadSong = async (interaction, url) => {
+    const dir = './downloads';
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+
+    const audioPath = './downloads/song.mp3';  // 定义文件路径
+
+    // 检查文件是否存在，如果存在则删除
+    if (fs.existsSync(audioPath)) {
+        await fs.promises.unlink(audioPath);
+    }
+
+    try {
+        await interaction.deferReply();
+        const download = ytdl(url, { 
+            quality: 'highestaudio',  // 选择最高音频质量
+            filter: 'audioonly'       // 过滤只下载音频流
+        });
+        const writedownload = fs.createWriteStream(audioPath);
+
+        let total = 0;
+        let downloaded = 0;
+        let lastPercentage = 0;
+
+        download.on('response', res => {
+            total = parseInt(res.headers['content-length'], 10);
+        });
+
+        download.on('progress', (chunkLength, downloadedChunks, totalChunks) => {
+            downloaded += chunkLength;
+            if (total) {
+                let percentage = (downloaded / total * 100).toFixed(2);
+                if (percentage > 100) percentage = 100;
+                if (percentage - lastPercentage >= 5) {
+                    lastPercentage = percentage;
+                    const progressEmbed = new EmbedBuilder()
+                        .setTitle('下载进度')
+                        .setDescription(`当前下载进度：${percentage}%`);
+
+                    interaction.editReply({ embeds: [progressEmbed] }).catch(console.error);
+                }
+            }
+        });
+
+        download.pipe(writedownload);
+
+        writedownload.on('finish', async () => {
+            console.log('下载完成');
+            const fileBuffer = await fs.promises.readFile(audioPath);
+            const attachment = new AttachmentBuilder(fileBuffer, { name: 'song.mp3' });
+
+            const embed = new EmbedBuilder()
+                .setTitle('文件下载完成')
+                .setDescription('这是您下载的音频文件');
+
+            await interaction.followUp({ content: '这里是您的音频文件:', files: [attachment], embeds: [embed] })
+                .catch(error => {
+                    console.error(`发送文件时出错: ${error.message}`);
+                });
+        });
+        
+    } catch (error) {
+        console.error(`下载音频时出错: ${error.message}`);
+        await interaction.followUp({ content: `下载音频失败: ${error.message}` });
+    }
+};
+
+
+
+
+
 export {
     playNextSong,
     skipToNextSong,
@@ -227,4 +301,5 @@ export {
     waitForIdleAndPlayNextSong,
     createVoiceConnection,
     stopPlaying,
+    downloadSong,
 };
