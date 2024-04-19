@@ -1,5 +1,5 @@
-import { SlashCommandBuilder } from 'discord.js';
-import { downloadSong } from '../../datapackage/musicfunction/playerManager.js';
+import { SlashCommandBuilder } from 'discord.js'
+import { downloadSong } from '../../datapackage/musicfunction/playerManager.js'
 
 // 定義 slash command 的基本資訊
 export const data = new SlashCommandBuilder()
@@ -12,6 +12,6 @@ export const data = new SlashCommandBuilder()
 
 // 执行 slash command 的主函數
 export async function execute(interaction) {
-        const url = interaction.options.getString('url');
-        downloadSong(interaction,url);
+        const url = interaction.options.getString('url')
+        downloadSong(interaction,url)
 }
