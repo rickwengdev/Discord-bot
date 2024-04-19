@@ -4,7 +4,7 @@ import ytdl from 'ytdl-core';
 import fs from 'fs';
 
 let playlists = new Map();
-const playlistPath = 'datapackge/musicfunction/playlists.json';
+const playlistPath = 'datapackage/musicfunction/playlists.json';
 
 // 將播放列表保存到文件的函數
 const savePlaylists = () => {

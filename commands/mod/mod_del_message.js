@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, PermissionFlagsBits } from "discord.js";
-import { deleteMessagesAsync } from "../../datapackge/modfunction/modbasicfuntion.js";
+import { deleteMessagesAsync } from "../../datapackage/modfunction/modbasicfuntion.js";
 
 // 創建 Slash 命令
 export const data = new SlashCommandBuilder()

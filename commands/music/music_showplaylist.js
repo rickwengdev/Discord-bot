@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { getPlaylist } from '../../datapackge/musicfunction/playerManager.js';
+import { getPlaylist } from '../../datapackage/musicfunction/playerManager.js';
 
 /**
  * 顯示當前播放列表的內容

@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { stopPlaying } from '../../datapackge/musicfunction/playerManager.js';
+import { stopPlaying } from '../../datapackage/musicfunction/playerManager.js';
 
 // 定義 slash command 的結構
 export const data = new SlashCommandBuilder()

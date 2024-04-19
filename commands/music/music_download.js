@@ -1,5 +1,5 @@
 import { SlashCommandBuilder } from 'discord.js';
-import { downloadSong } from '../../datapackge/musicfunction/playerManager.js';
+import { downloadSong } from '../../datapackage/musicfunction/playerManager.js';
 
 // 定義 slash command 的基本資訊
 export const data = new SlashCommandBuilder()

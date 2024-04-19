@@ -11,13 +11,13 @@ import { Client, Partials, Events, Collection, GatewayIntentBits } from 'discord
 import dotenv from 'dotenv';
 
 // 引入自定義模組，處理日誌相關功能
-import { setupLogEvents } from './datapackge/modfunction/log.js';
+import { setupLogEvents } from './datapackage/modfunction/log.js';
 
 // 引入自定義模組，處理訊息反應相關功能
-import { messageReaction } from './datapackge/modfunction/messageReaction.js';
+import { messageReaction } from './datapackage/modfunction/messageReaction.js';
 
 // 引入自定義模組，處理用戶加入伺服器相關功能
-import { guildMember } from './datapackge/modfunction/guildMember.js';
+import { guildMember } from './datapackage/modfunction/guildMember.js';
 
 // 載入 .env 文件中的環境變數
 dotenv.config();
