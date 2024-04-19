@@ -62,7 +62,7 @@ function addDinner(guildId, dinner) {
 
 // 執行 Slash Command 的處理函數
 export const execute = async (interaction) => {
-    if (!interaction.isCommand() || interaction.commandName !== 'add_dinner') return;
+    if (!interaction.isCommand() || interaction.commandName !== 'fun_add_dinner') return;
 
     const dinner = interaction.options.getString('dinner');
     if (!dinner) {

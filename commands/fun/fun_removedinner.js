@@ -62,7 +62,7 @@ function removeDinner(guildId, dinner) {
 }
 
 export const execute = async (interaction) => {
-    if (!interaction.isCommand() || interaction.commandName !== 'remove_dinner') return;
+    if (!interaction.isCommand() || interaction.commandName !== 'fun_remove_dinner') return;
 
     const dinner = interaction.options.getString('dinner');
     if (!dinner) {
