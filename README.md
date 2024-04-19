@@ -137,6 +137,9 @@ Discord.js v14
 
 - 自動創建語音頻道
   1. 在 `.env` 中添加 `autovoicechannelID` 指定用於創建專屬語音頻道的基礎頻道
+  ```.env
+  autovoicechannelID=your-autovoicechannelID
+  ```
 
 - 歡迎訊息
   1. 在 `.env` 中添加 `welcomeChannelID` 和 `leaveChannelID`
