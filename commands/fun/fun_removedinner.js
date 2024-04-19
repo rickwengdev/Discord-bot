@@ -13,7 +13,6 @@ function ensureDirectoryExistence(filePath) {
     fs.mkdirSync(dirname, { recursive: true });
 }
 
-// 定義為函數聲明以利用 JavaScript 的函數提升
 function saveDinnerlists(dinnerlistsToSave = dinnerlists) {
     ensureDirectoryExistence(dinnerlistPath);
     const jsonObject = Object.fromEntries(dinnerlistsToSave.entries());
@@ -24,14 +23,12 @@ function saveDinnerlists(dinnerlistsToSave = dinnerlists) {
     }
 }
 
-// 嘗試從文件中讀取已存儲的晚餐列表，如果不存在則創建空文件
 function loadDinnerlists() {
     try {
         if (fs.existsSync(dinnerlistPath)) {
             const data = fs.readFileSync(dinnerlistPath, 'utf-8');
             return new Map(Object.entries(JSON.parse(data)));
         } else {
-            // 文件不存在，初始化一個空的 Map 並嘗試創建文件
             saveDinnerlists(new Map());
         }
     } catch (err) {
@@ -42,27 +39,30 @@ function loadDinnerlists() {
 
 let dinnerlists = loadDinnerlists();
 
-// 定義 Slash Command
 export const data = new SlashCommandBuilder()
-    .setName('add_dinner')
-    .setDescription('Add a dinner to the dinner list')
+    .setName('fun_remove_dinner')
+    .setDescription('Remove a dinner from the dinner list')
     .addStringOption(option =>
         option.setName('dinner')
-        .setDescription('新增菜單項目')
+        .setDescription('要刪除的菜單項目')
         .setRequired(true))
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator);
 
-// 添加晚餐項目到列表
-function addDinner(guildId, dinner) {
+function removeDinner(guildId, dinner) {
     const dinnerlist = dinnerlists.get(guildId) || [];
-    dinnerlist.push(dinner);
+    const dinnerIndex = dinnerlist.indexOf(dinner);
+    if (dinnerIndex === -1) {
+        console.log('晚餐未在列表中找到。');
+        return false; // 未找到项，返回 false
+    }
+    dinnerlist.splice(dinnerIndex, 1); // 正确使用 splice 方法
     dinnerlists.set(guildId, dinnerlist);
     saveDinnerlists();
+    return true; // 成功删除后，返回 true
 }
 
-// 執行 Slash Command 的處理函數
 export const execute = async (interaction) => {
-    if (!interaction.isCommand() || interaction.commandName !== 'add_dinner') return;
+    if (!interaction.isCommand() || interaction.commandName !== 'remove_dinner') return;
 
     const dinner = interaction.options.getString('dinner');
     if (!dinner) {
@@ -70,6 +70,10 @@ export const execute = async (interaction) => {
         return;
     }
 
-    addDinner(interaction.guildId, dinner);
-    await interaction.reply(`成功新增菜單項目: ${dinner}`);
+    const success = removeDinner(interaction.guildId, dinner);
+    if (success) {
+        await interaction.reply(`成功刪除菜單項目: ${dinner}`);
+    } else {
+        await interaction.reply(`找不到菜單項目: ${dinner}`, { ephemeral: true });
+    }
 };
