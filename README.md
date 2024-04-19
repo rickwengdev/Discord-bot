@@ -215,6 +215,6 @@ Discord.js v14
 
 ### 問題和反饋
 
-如果您遇到任何問題或有建議，請在 [GitHub 存儲庫](link-to-repository) 中提交問題。
+如果您遇到任何問題或有建議，請在 [GitHub 存儲庫](https://github.com/Rick783/Discord-bot) 中提交問題。
 
 感謝您使用我們的 Discord 機器人！
