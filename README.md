@@ -211,7 +211,7 @@ Discord.js v14
 
 ### 貢獻
 
-如果您有興趣為此機器人做出貢獻，請參閱我們的 [貢獻準則](link-to-contributing-guidelines)。
+如果您有興趣為此機器人做出貢獻，請參閱我們的 [貢獻準則]([/Users/Rick783/VScode/Discord-bot/CONTRIBUTING.md](https://github.com/Rick783/Discord-bot/blob/main/CONTRIBUTING.md))。
 
 ### 問題和反饋
 
