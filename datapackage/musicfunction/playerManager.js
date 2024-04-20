@@ -201,7 +201,7 @@ const stopPlaying = async (interaction) => {
         if (connection) {
             connection = undefined;
         }
-        await interaction.followUp('已停止播放。');
+        await console.log('已停止播放。');
     } catch (error) {
         handleCommandError(interaction, error);
     }
