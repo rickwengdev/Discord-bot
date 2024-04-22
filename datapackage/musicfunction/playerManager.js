@@ -202,7 +202,6 @@ const stopPlaying = async (interaction) => {
         if (connection) {
             connection = getConnection(interaction.guild.id);
             connection.destroy();
-            connection = undefined;
         }
         await console.log('已停止播放。');
     } catch (error) {
