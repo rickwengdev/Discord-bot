@@ -2,6 +2,7 @@ import { createAudioPlayer, createAudioResource, joinVoiceChannel, demuxProbe } 
 import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
 import ytdl from 'ytdl-core';
 import fs from 'fs';
+import { get } from 'http';
 
 let playlists = new Map();
 const playlistPath = 'datapackage/musicfunction/playlists.json';
@@ -62,11 +63,10 @@ loadPlaylists();
 
 // 創建全球的音頻播放器
 const player = createAudioPlayer();
-let connection = undefined;
 let songUrl = undefined;
 
 // 創建音頻連接的函數
-const createVoiceConnection = (interaction) => {
+const createVoiceConnection = (interaction,connection) => {
     try {
         const { guildId, member } = interaction;
         const voiceChannel = member?.voice?.channelId;
@@ -126,7 +126,8 @@ const playNextSong = async (interaction) => {
 
         if (!connection) {
             // 加入語音頻道
-            connection = createVoiceConnection(interaction);
+            let connection
+            connection = createVoiceConnection(interaction,connection);
             connection.subscribe(player);
         }
 
@@ -199,6 +200,8 @@ const stopPlaying = async (interaction) => {
             player.stop();
         }
         if (connection) {
+            connection = getConnection(interaction.guild.id);
+            connection.destroy();
             connection = undefined;
         }
         await console.log('已停止播放。');
