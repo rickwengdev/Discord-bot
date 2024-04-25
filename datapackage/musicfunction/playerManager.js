@@ -272,7 +272,7 @@ const downloadSong = async (interaction, url) => {
         writedownload.on('finish', async () => {
             console.log('下載完成');
             const fileBuffer = await fs.promises.readFile(audioPath);
-            const attachment = new AttachmentBuilder(fileBuffer, { name: 'song.mp3' });
+            const attachment = new AttachmentBuilder(fileBuffer, { name: 'song.wav' });
 
             const embed = new EmbedBuilder()
                 .setTitle('文件下載完成')
