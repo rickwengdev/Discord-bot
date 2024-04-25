@@ -63,6 +63,7 @@ loadPlaylists();
 
 // 創建全球的音頻播放器
 const player = createAudioPlayer();
+let connection = undefined;
 let songUrl = undefined;
 
 // 創建音頻連接的函數
@@ -200,8 +201,8 @@ const stopPlaying = async (interaction) => {
             player.stop();
         }
         if (connection) {
-            connection = getConnection(interaction.guild.id);
             connection.destroy();
+            connection = undefined;
         }
         await console.log('已停止播放。');
     } catch (error) {
