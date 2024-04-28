@@ -1,8 +1,9 @@
-import { createAudioPlayer, createAudioResource, joinVoiceChannel, demuxProbe } from '@discordjs/voice';
+import { createAudioPlayer, createAudioResource, joinVoiceChannel, demuxProbe, getVoiceConnection } from '@discordjs/voice';
 import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
 import ytdl from 'ytdl-core';
 import fs from 'fs';
 import { get } from 'http';
+import { compileFunction } from 'vm';
 
 let playlists = new Map();
 const playlistPath = 'datapackage/musicfunction/playlists.json';
@@ -63,11 +64,10 @@ loadPlaylists();
 
 // 創建全球的音頻播放器
 const player = createAudioPlayer();
-let connection = undefined;
 let songUrl = undefined;
 
 // 創建音頻連接的函數
-const createVoiceConnection = (interaction,connection) => {
+const createVoiceConnection = (interaction) => {
     try {
         const { guildId, member } = interaction;
         const voiceChannel = member?.voice?.channelId;
@@ -80,6 +80,8 @@ const createVoiceConnection = (interaction,connection) => {
         // 在此處添加獲取用戶信息的例子
         const user = interaction.user;
         console.log(`使用者名稱: ${user.username}, 使用者ID: ${user.id}, 頻道ID: ${voiceChannel}`);
+        
+        let connection
 
         connection = joinVoiceChannel({
             channelId: voiceChannel,
@@ -118,6 +120,7 @@ const playNextSong = async (interaction) => {
 
         const guildId = interaction.guild.id;
         songUrl = getNextSong(guildId);
+        
         if (songUrl === undefined) {
             throw new Error('播放列表為空。');
         }
@@ -125,10 +128,15 @@ const playNextSong = async (interaction) => {
         // 在添加新的錯誤監聽器之前手動移除舊的監聽器
         player.off('error', handlePlayerError);
 
-        if (!connection) {
+        let connection = getVoiceConnection(interaction.guild.id);
+
+        console.log(connection);
+
+        if (connection == undefined || !connection) {
             // 加入語音頻道
+            console.log('加入語音頻道。');
             let connection
-            connection = createVoiceConnection(interaction,connection);
+            connection = createVoiceConnection(interaction);
             connection.subscribe(player);
         }
 
@@ -200,10 +208,11 @@ const stopPlaying = async (interaction) => {
         if (player.state.status !== 'idle') {
             player.stop();
         }
-        if (connection) {
-            connection.destroy();
-            connection = undefined;
+        if (getVoiceConnection(interaction.guild.id) !== null) {
+        let connection = getVoiceConnection(interaction.guild.id);
+        connection.destroy();
         }
+
         await console.log('已停止播放。');
     } catch (error) {
         handleCommandError(interaction, error);
