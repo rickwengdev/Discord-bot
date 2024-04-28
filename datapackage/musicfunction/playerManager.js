@@ -130,8 +130,6 @@ const playNextSong = async (interaction) => {
 
         let connection = getVoiceConnection(interaction.guild.id);
 
-        console.log(connection);
-
         if (connection == undefined || !connection) {
             // 加入語音頻道
             console.log('加入語音頻道。');
