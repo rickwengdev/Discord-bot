@@ -1,9 +1,9 @@
 import { createAudioPlayer, createAudioResource, joinVoiceChannel, demuxProbe, getVoiceConnection } from '@discordjs/voice';
 import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
-import ytdl from 'ytdl-core';
+import ytdl from '@distube/ytdl-core';
 import fs from 'fs';
-import { get } from 'http';
-import { compileFunction } from 'vm';
+const ytcookiepath = 'datapackage/musicfunction/ytcookie.json'
+const agent = ytdl.createAgent(JSON.parse(fs.readFileSync(ytcookiepath, 'utf-8')));
 
 let playlists = new Map();
 const playlistPath = 'datapackage/musicfunction/playlists.json';
@@ -101,7 +101,7 @@ const createVoiceConnection = (interaction) => {
 const createStream = (songUrl) => {
     // 在此處添加創建音頻流的例子
     console.log(`創建音頻流：${songUrl}`);
-    return ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
+    return ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25,agent: agent });
 };
 
 // 創建音頻資源的函數
@@ -207,8 +207,8 @@ const stopPlaying = async (interaction) => {
             player.stop();
         }
         if (getVoiceConnection(interaction.guild.id) !== null) {
-        let connection = getVoiceConnection(interaction.guild.id);
-        connection.destroy();
+            let connection = getVoiceConnection(interaction.guild.id);
+            connection.destroy();
         }
 
         await console.log('已停止播放。');
@@ -225,7 +225,7 @@ const handlePlayerError = (error) => {
 // 新的錯誤處理函數
 const handleCommandError = (interaction, error) => {
     console.error(`指令錯誤: ${error.message}`);
-    interaction.reply({ content: `指令執行失敗: ${error.message}`, ephemeral: true });
+    // interaction.reply({ content: `指令執行失敗: ${error.message}`, ephemeral: true });
 };
 
 // 下载歌曲的函數
