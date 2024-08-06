@@ -2,8 +2,7 @@ import { createAudioPlayer, createAudioResource, joinVoiceChannel, demuxProbe, g
 import { AttachmentBuilder, EmbedBuilder } from 'discord.js';
 import ytdl from '@distube/ytdl-core';
 import fs from 'fs';
-const ytcookiepath = 'datapackage/musicfunction/ytcookie.json'
-const agent = ytdl.createAgent(JSON.parse(fs.readFileSync(ytcookiepath, 'utf-8')));
+
 
 let playlists = new Map();
 const playlistPath = 'datapackage/musicfunction/playlists.json';
@@ -101,7 +100,7 @@ const createVoiceConnection = (interaction) => {
 const createStream = (songUrl) => {
     // 在此處添加創建音頻流的例子
     console.log(`創建音頻流：${songUrl}`);
-    return ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25,agent: agent });
+    return ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
 };
 
 // 創建音頻資源的函數
