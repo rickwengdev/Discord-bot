@@ -1,7 +1,8 @@
-import { SlashCommandBuilder } from 'discord.js'
+import { SlashCommandBuilder, EmbedBuilder } from 'discord.js'
 import { addSong } from '../../datapackage/musicfunction/playerManager.js'
 import axios from 'axios'
 import cheerio from 'cheerio'
+import ytdl from '@distube/ytdl-core'
 
 // 檢查是否為有效的 YouTube 鏈接
 async function is_valid_youtube_url(url) {
@@ -27,8 +28,13 @@ async function addToPlaylist(interaction) {
     }
 
     // 將歌曲添加到播放列表
-    addSong(interaction.guild.id, songUrl)
-    await interaction.reply(`已將 ${songUrl} 添加到播放列表。`)
+    await addSong(interaction.guild.id, songUrl)
+    const info = await ytdl.getBasicInfo(songUrl)
+    const embed = new EmbedBuilder()
+            .setColor('#FF0000')  // YouTube 主题颜色
+            .setTitle(info.videoDetails.title)
+            .setThumbnail(info.videoDetails.thumbnails[0].url)
+    interaction.reply({ content: '添加到播放列表:', embeds: [embed] })
 }
 
 // 定義 Slash Command

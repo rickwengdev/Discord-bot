@@ -10,5 +10,4 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction) {
     await skipToNextSong()
     console.log(`${interaction.user.username} 已跳轉到下一首歌曲。}`)
-    interaction.reply('播放下一首歌曲。')
 }

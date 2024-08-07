@@ -42,6 +42,8 @@ const rest = new REST({ version: '10' }).setToken(process.env.token);
 // 部署應用 (/) 指令
 (async () => {
     try {
+        console.log('註冊APP token: ' + process.env.token)
+
         console.log(`開始刷新 ${commands.length} 個應用 (/) 指令。`);
 
         // 使用 put 方法來完全刷新伺服器中的所有指令

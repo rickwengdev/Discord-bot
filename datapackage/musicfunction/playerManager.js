@@ -91,8 +91,7 @@ const createVoiceConnection = (interaction) => {
         return connection;
     } catch (error) {
         console.error(`創建音頻連接時發生錯誤: ${error.message}`);
-        // 考慮在這裡給用戶發送錯誤消息
-        handleCommandError(interaction, error);
+        handleCommandError(error);
     }
 };
 
@@ -120,12 +119,19 @@ const playNextSong = async (interaction) => {
         const guildId = interaction.guild.id;
         songUrl = getNextSong(guildId);
         
-        if (songUrl === undefined) {
-            throw new Error('播放列表為空。');
-        }
+        const info = await ytdl.getBasicInfo(songUrl)
 
-        // 在添加新的錯誤監聽器之前手動移除舊的監聽器
-        player.off('error', handlePlayerError);
+        const embed = new EmbedBuilder()
+            .setColor('#FF0000')  // YouTube 主题颜色
+            .setTitle(info.videoDetails.title)
+            .setDescription(info.videoDetails.description.length > 200 ? info.videoDetails.description.slice(0, 197) + '...' : info.videoDetails.description)
+            .setThumbnail(info.videoDetails.thumbnails[0].url)
+
+        interaction.editReply({ content: '正在播放歌曲:', embeds: [embed] });
+        
+        if (songUrl === undefined) {
+            interaction.editReply('播放列表為空。');
+        }
 
         let connection = getVoiceConnection(interaction.guild.id);
 
@@ -144,22 +150,20 @@ const playNextSong = async (interaction) => {
         console.log(`播放音頻：${songUrl}`);
         player.play(resource);
 
-        // 重新添加新的錯誤監聽器
-        player.on('error', handlePlayerError);
-
         await waitForIdleAndPlayNextSong(interaction);
     } catch (error) {
         console.error('播放下一首歌曲時發生錯誤:', error);
         if (error.message === '播放列表為空。') {
             console.log('播放列表為空，等待新歌曲加入。');
         } else {
-            handleCommandError(interaction, error);
+            handleCommandError(error);
         }
     }
 };
 
 // 等待播放器空閒並播放下一首歌曲的函數
 const waitForIdleAndPlayNextSong = async (interaction) => {
+    try{
     await new Promise((resolve) => {
         let songUrl2
         player.once('idle', () => {
@@ -184,7 +188,10 @@ const waitForIdleAndPlayNextSong = async (interaction) => {
                 }, 5 * 60 * 1000); // 300 秒後斷開連接
             }
         });
-    });
+    });}   
+    catch (error) {
+        handleCommandError(error);
+    }
 };
 
 // 跳過到下一首歌曲的函數
@@ -212,19 +219,13 @@ const stopPlaying = async (interaction) => {
 
         await console.log('已停止播放。');
     } catch (error) {
-        handleCommandError(interaction, error);
+        handleCommandError(error);
     }
 };
 
 // 新的錯誤處理函數
-const handlePlayerError = (error) => {
-    console.error(`音頻播放器錯誤：${error.message}`);
-};
-
-// 新的錯誤處理函數
-const handleCommandError = (interaction, error) => {
+const handleCommandError = (error) => {
     console.error(`指令錯誤: ${error.message}`);
-    // interaction.reply({ content: `指令執行失敗: ${error.message}`, ephemeral: true });
 };
 
 // 下载歌曲的函數

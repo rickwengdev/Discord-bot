@@ -10,6 +10,5 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction) {
         // 在 playerManager.js 中處理連接和播放
         playNextSong(interaction)
-
-        // interaction.reply('播放歌曲。')
+        interaction.deferReply()
 }
