@@ -17,10 +17,10 @@ function loadConfig() {
 }
 
 function messageReaction(client) {
-    // 处理消息反应新增事件
+    // 處理消息反應添加事件
     client.on('messageReactionAdd', async (reaction, user) => {
         const config = loadConfig();
-        if (user.bot) return; // Ignore bot reactions
+        if (user.bot) return; // 忽略機器人反應
 
         const guild = reaction.message.guild;
         if (!guild) return;
@@ -29,7 +29,7 @@ function messageReaction(client) {
         if (config[guildId]) {
             const messageReactions = config[guildId];
 
-            // 检查每条消息配置
+            // 檢查每條消息配置
             for (const [messageId, emojis] of Object.entries(messageReactions)) {
                 if (reaction.message.id === messageId) {
                     const roleId = emojis[reaction.emoji.name];
@@ -45,10 +45,10 @@ function messageReaction(client) {
         }
     });
 
-    // 处理消息反应移除事件
+    // 處理消息反應移除事件
     client.on('messageReactionRemove', async (reaction, user) => {
         const config = loadConfig();
-        if (user.bot) return; // Ignore bot reactions
+        if (user.bot) return; // 忽略機器人反應
 
         const guild = reaction.message.guild;
         if (!guild) return;
@@ -57,7 +57,7 @@ function messageReaction(client) {
         if (config[guildId]) {
             const messageReactions = config[guildId];
 
-            // 检查每条消息配置
+            // 檢查每條消息配置
             for (const [messageId, emojis] of Object.entries(messageReactions)) {
                 if (reaction.message.id === messageId) {
                     const roleId = emojis[reaction.emoji.name];

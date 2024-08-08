@@ -16,7 +16,7 @@ function guildMember(client) {
         const guildConfig = config[guildId];
         
         if (!guildConfig) {
-            console.log(`未找到伺服器 ${guildId} 的配置。`);
+            console.log(`Configuration not found for server ${guildId}.`);
             return;
         }
 
@@ -29,14 +29,14 @@ function guildMember(client) {
         try {
             bannerBuffer = await fs.promises.readFile(welcomeBannerPath);
         } catch (error) {
-            console.log('無法讀取歡迎橫幅檔案。', error);
+            console.log('Unable to read welcome banner file', error);
         }
 
         if (welcomeChannel) {
             try {
                 const embed = new EmbedBuilder()
-                    .setTitle(`歡迎 ${member.user.tag} 加入我們的伺服器！`)
-                    .setDescription(`${member.user.toString()} 歡迎你！`)
+                    .setTitle(`welcome ${member.user.tag} Join server!`)
+                    .setDescription(`${member.user.toString()} Welcome!`)
                     .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: 'png', size: 256 }));
                 
                 if (bannerBuffer) {
@@ -45,10 +45,10 @@ function guildMember(client) {
                     await welcomeChannel.send({ embeds: [embed] });
                 }
             } catch (error) {
-                console.error('發送歡迎消息或橫幅時出現錯誤：', error);
+                console.error('An error occurred while sending the welcome message or banner:', error);
             }
         } else {
-            console.log('未找到歡迎頻道。');
+            console.log('Welcome channel not found.');
         }
     });
 
@@ -58,7 +58,7 @@ function guildMember(client) {
         const guildConfig = config[guildId];
         
         if (!guildConfig) {
-            console.log(`未找到伺服器 ${guildId} 的配置。`);
+            console.log(`Configuration not found for server ${guildId}.`);
             return;
         }
 
@@ -67,12 +67,12 @@ function guildMember(client) {
 
         if (leaveChannel) {
             try {
-                await leaveChannel.send(`**${member.user.tag}** 離開了伺服器。`);
+                await leaveChannel.send(`**${member.user.tag}** Left the server.`);
             } catch (error) {
-                console.error('發送離開消息時出現錯誤：', error);
+                console.error('An error occurred while sending away message:', error);
             }
         } else {
-            console.log('未找到離開頻道。');
+            console.log('Leave channel not found.');
         }
     });
 }

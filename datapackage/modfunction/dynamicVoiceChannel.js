@@ -2,31 +2,31 @@ import fs from 'fs';
 import path from 'path';
 import { PermissionsBitField } from 'discord.js';
 
-// 获取当前目录路径
+// 獲取當前檔案的路徑
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 function dynamicvoicechannel(client) {
-    // 读取 dynamicvoicechannel.json 文件
+    // 讀取 JSON 檔案
     const configPath = path.resolve(__dirname, 'dynamicvoicechannel.json');
     const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     const serverTrackingChannels = config;
 
-    // 监听语音状态更新事件
+    // 監聽成員加入或離開語音頻道的事件
     client.on('voiceStateUpdate', async (oldState, newState) => {
         const guild = newState.guild;
         const triggerChannelId = serverTrackingChannels[guild.id];
 
-        // 检查是否有成员加入触发频道
+        // 檢查是否有成員加入了指定的語音頻道
         if (triggerChannelId && newState.channelId === triggerChannelId) {
             const member = newState.member;
             let channelName = member.user.username.trim().replace(/[^a-zA-Z0-9\-_ ]/g, "");
             if (!channelName) channelName = 'Default Channel';
 
             try {
-                // 创建新的语音频道
+                // 創建新的語音頻道
                 const channel = await guild.channels.create({
-                    name: `${channelName}'s Channel.`,
-                    type: 2, // 2 表示语音频道
+                    name: `${channelName}'s Channel`,
+                    type: 2, // 2 = 語音頻道
                     parent: newState.channel.parentId,
                     permissionOverwrites: [{
                         id: member.id,
@@ -46,9 +46,9 @@ function dynamicvoicechannel(client) {
             }
         }
 
-        // 检查是否有成员离开了之前创建的语音频道
+        // 檢查是否有成員離開了語音頻道
         if (oldState.channel && oldState.channel.members.size === 0) {
-            if (oldState.channel.name.includes("'s Channel.")) {
+            if (oldState.channel.name.includes("'s Channel")) {
                 await oldState.channel.delete(); // 删除空的语音频道
             }
         }

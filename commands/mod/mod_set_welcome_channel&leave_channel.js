@@ -3,11 +3,13 @@ import path from 'path';
 import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 import { fileURLToPath } from 'node:url';
 
+// 獲取當前檔案的路徑
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const configPath = path.resolve(__dirname, '../../datapackage/modfunction/guildMember.json');
 
+// 更新 JSON 檔案
 const updateConfig = (guildId, channelId, type) => {
     let config;
     try {
@@ -29,6 +31,7 @@ const updateConfig = (guildId, channelId, type) => {
     }
 };
 
+// 定義 slash 指令的資料
 export const data = new SlashCommandBuilder()
     .setName('mod_set_w_and_l_channel')
     .setDescription('Set the welcome or leave channel for the server')
@@ -45,17 +48,18 @@ export const data = new SlashCommandBuilder()
         option.setName('channel')
             .setDescription('The channel to set')
             .setRequired(true)
-            .addChannelTypes(0) // 0 is for text channels
+            .addChannelTypes(0) // 0  = 文字頻道
     )
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
 
+// 定義執行 slash 指令的函數
 export const execute = async (interaction) => {
     const type = interaction.options.getString('type');
     const channel = interaction.options.getChannel('channel');
     const channelId = channel.id;
     const guildId = interaction.guild.id;
 
-    // Update JSON file with the new channel ID
+    // 更新 JSON 檔案
     if (type === 'welcome') {
         updateConfig(guildId, channelId, 'welcomeChannelID');
         await interaction.reply(`Welcome channel has been set to <#${channelId}>.`);

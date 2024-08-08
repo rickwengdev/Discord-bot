@@ -4,14 +4,14 @@ import { deleteMessagesAsync } from "../../datapackage/modfunction/modbasicfunti
 // 創建 Slash 命令
 export const data = new SlashCommandBuilder()
     .setName('mod_delete_message')
-    .setDescription('刪除訊息')
+    .setDescription('Delete message')
     .addIntegerOption(option =>
         option.setName('message_number')
-            .setDescription('要刪除的訊息數量')
+            .setDescription('Number of messages to delete')
             .setRequired(true))
     .addBooleanOption(option =>
         option.setName('reliable_vintage_model')
-            .setDescription('是否為超過兩週的訊息或超過100條訊息的刪除模式'))
+            .setDescription('Is it the deletion mode for messages older than two weeks or more than 100 messages?'))
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
 
 // 執行 Slash 命令的處理函數

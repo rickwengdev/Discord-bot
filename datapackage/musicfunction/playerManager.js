@@ -87,7 +87,7 @@ class MusicPlayer {
 
     // 創建音頻流
     createStream(songUrl) {
-        console.log(`Create audio stream：${songUrl}`);
+        console.log(`🔄Create audio stream：${songUrl}`);
         return ytdl(songUrl, { filter: 'audioonly', quality: 'highestaudio', highWaterMark: 1 << 25 });
     }
 
@@ -133,7 +133,7 @@ class MusicPlayer {
             const stream = this.createStream(this.songUrl);
             const resource = await this.createResource(stream);
 
-            console.log(`Play audio：${this.songUrl}`);
+            console.log(`▶️Play audio：${this.songUrl}`);
             this.player.play(resource);
 
             await this.waitForIdleAndPlayNextSong(interaction);

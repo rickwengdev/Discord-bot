@@ -63,7 +63,7 @@ for (const folder of commandFolders) {
         if ('data' in command && 'execute' in command) {
             client.commands.set(command.data.name, command)
         } else {
-            console.log(`[警告] 在 ${filePath} 中的命令缺少必要的 "data" 或 "execute" 屬性。`)
+            console.log(`[WARNING] The command in ${filePath} is missing a required "data" or "execute" attribute.`)
         }
     }
 }
@@ -75,7 +75,7 @@ client.on(Events.InteractionCreate, async interaction => {
     const command = interaction.client.commands.get(interaction.commandName)
 
     if (!command) {
-        console.error(`未找到匹配 ${interaction.commandName} 的命令。`)
+        console.error(`No command matching ${interaction.commandName} found.`)
         return
     }
 
@@ -85,13 +85,13 @@ client.on(Events.InteractionCreate, async interaction => {
             await command.execute(interaction)
         } catch (error) {
             if (error.code !== 'InteractionAlreadyReplied') {
-                console.error('執行命令時發生錯誤:', error)
+                console.error('An error occurred while executing the command:', error)
             }
         }
     } catch (error) {
         console.error(error)
         // 回覆錯誤給用戶
-        await interaction.reply({ content: '執行此命令時發生錯誤！', ephemeral: true })
+        await interaction.reply({ content: 'An error occurred while executing this command!', ephemeral: true })
     }
 });
 
@@ -102,7 +102,7 @@ client.on('ready', () => {
 
 // 客戶端準備好後輸出日誌
 client.once(Events.ClientReady, c => {
-    console.log(`就緒！已登入為 ${c.user.tag}`)
+    console.log(`Ready! Signed in as ${c.user.tag}`)
 });
 
 // 設置訊息反應事件
