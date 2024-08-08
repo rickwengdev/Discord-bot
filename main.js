@@ -9,17 +9,14 @@ import { Client, Partials, Events, Collection, GatewayIntentBits } from 'discord
 // 引入 dotenv 模組，用於載入環境變數
 import dotenv from 'dotenv'
 
-// 引入自定義模組，處理日誌相關功能
-import { setupLogEvents } from './datapackage/modfunction/log.js'
-
 // 引入自定義模組，處理訊息反應相關功能
 import { messageReaction } from './datapackage/modfunction/messageReaction.js'
 
 // 引入自定義模組，處理用戶加入伺服器相關功能
-import { guildMember } from './datapackage/botfunction/guildMember.js'
+import { guildMember } from './datapackage/modfunction/guildMember.js'
 
 // 引入自定義模組，處理自動語音頻道相關功能
-import { dynamicvoicechannel } from './datapackage/botfunction/dynamicVoiceChannel.js'
+import { dynamicvoicechannel } from './datapackage/modfunction/dynamicVoiceChannel.js'
 
 // 載入 .env 文件中的環境變數
 dotenv.config()
@@ -107,9 +104,6 @@ client.on('ready', () => {
 client.once(Events.ClientReady, c => {
     console.log(`就緒！已登入為 ${c.user.tag}`)
 });
-
-// 設置日誌事件
-setupLogEvents(client)
 
 // 設置訊息反應事件
 messageReaction(client)

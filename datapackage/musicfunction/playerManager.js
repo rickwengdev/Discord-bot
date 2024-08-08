@@ -204,5 +204,4 @@ loadPlaylists();
 export {
     errorhandler,
     getMusicPlayer,
-    agent,
 }
