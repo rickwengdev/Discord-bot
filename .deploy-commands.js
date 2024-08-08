@@ -31,7 +31,7 @@ for (const folder of commandFolders) {
         if ('data' in command && 'execute' in command) {
             commands.push(command.data.toJSON());
         } else {
-            console.log(`[警告] 在 ${filePath} 中的指令缺少必要的 "data" 或 "execute" 屬性。`);
+            console.log(`[WARNING] Directive in ${filePath} is missing a required "data" or "execute" attribute.`);
         }
     }
 }
@@ -42,9 +42,9 @@ const rest = new REST({ version: '10' }).setToken(process.env.token);
 // 部署應用 (/) 指令
 (async () => {
     try {
-        console.log('註冊APP token: ' + process.env.token)
+        console.log(`Register APP token:${process.env.token}`)
 
-        console.log(`開始刷新 ${commands.length} 個應用 (/) 指令。`);
+        console.log(`🔄Start refreshing ${commands.length} application (/) commands.`);
 
         // 使用 put 方法來完全刷新伺服器中的所有指令
         const data = await rest.put(
@@ -52,7 +52,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.token);
             { body: commands },
         );
 
-        console.log(`成功重新載入 ${data.length} 個應用 (/) 指令。`);
+        console.log(`✅Successfully reloaded ${data.length} application (/) directives.`);
     } catch (error) {
         // 確保捕獲並記錄任何錯誤
         console.error(error);
