@@ -17,7 +17,7 @@ export const data = new SlashCommandBuilder()
 // 執行 Slash 命令的處理函數
 export async function execute(interaction) {
     // 獲取要刪除的訊息數量和可靠的歷史模式選項
-    const messageNumber = interaction.options.getInteger('message_number') + 1
+    const messageNumber = interaction.options.getInteger('message_number')
     let timeRangeBig = interaction.options.getBoolean('reliable_vintage_model')
     
     // 如果未提供模式選項，預設為 true
