@@ -14,15 +14,15 @@ const deleteMessagesAsync = async (interaction, numberOfMessagesToDelete, timeRa
 
         try {
             // 使用 Promise.race 選擇較快解決的 Promise
-            const result = await Promise.race([deletePromise, timeoutPromise]);
+            const result = await Promise.race([deletePromise]);
 
             // 根據 result 的值執行相應的操作
             if (result > 0) {
                 // 刪除操作成功，執行相應的處理
-                await interaction.reply(`Deleted ${result} messages`, { ephemeral: true });
+                await interaction.editReply(`Deleted ${result} messages`, { ephemeral: true });
             } else {
                 // 如果 result <= 0，可能表示沒有消息被刪除
-                await interaction.reply('No messages were deleted', { ephemeral: true });
+                await interaction.editReply('No messages were deleted', { ephemeral: true });
             }
         } catch (error) {
                 // 在這裡處理其他可能的錯誤
@@ -93,7 +93,7 @@ const handleErrorResponse = async (error, interaction, errorMessage) => {
     console.error(errorMessage, error);
 
     try {
-        await interaction.reply(errorMessage);
+        await interaction.editReply(errorMessage);
     } catch (replyError) {
         handleReplyError(replyError);
     }
