@@ -10,10 +10,7 @@ const deleteMessagesAsync = async (interaction, numberOfMessagesToDelete, timeRa
         const channel = interaction.channel;
         const deletePromise = deleteMessages(channel, numberOfMessagesToDelete, timeRangeBig);
 
-        // 在回應之前等待一段時間，確保 Discord API 完成刪除消息的操作
-        const timeoutPromise = new Promise((resolve, reject) => {
-            setTimeout(() => reject(new Error('Delete operation timed out.')), 10000); // 設置超時為 10 秒
-        });
+        await interaction.deferReply({ ephemeral: true });
 
         try {
             // 使用 Promise.race 選擇較快解決的 Promise
@@ -28,12 +25,9 @@ const deleteMessagesAsync = async (interaction, numberOfMessagesToDelete, timeRa
                 await interaction.reply('No messages were deleted', { ephemeral: true });
             }
         } catch (error) {
-            // 檢查錯誤是否是超時錯誤，如果是，您可以忽略它
-            if (error.message !== 'Delete operation timed out') {
                 // 在這裡處理其他可能的錯誤
                 handleReplyError(error);
             }
-        }
     } catch (error) {
         // 在這裡處理其他可能的錯誤
         handleDeleteError(error, interaction);
