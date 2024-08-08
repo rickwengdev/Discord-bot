@@ -1,6 +1,10 @@
 {
-  "1270497615653638287": {
-    "welcomeChannelID": "1271088763489091657",
-    "leaveChannelID": "1271088812935872614"
+  "ServerID1": {
+    "welcomeChannelID": "ChannelID",
+    "leaveChannelID": "ChannelID"
+  },
+  "ServerID2": {
+    "welcomeChannelID": "ChannelID",
+    "leaveChannelID": "ChannelID"
   }
 }
