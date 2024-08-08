@@ -1,4 +1,4 @@
-FROM node:latest
+FROM node:21
 
 # 复制 package.json 并安装依赖
 WORKDIR /usr/src/app

@@ -131,11 +131,11 @@ Discord.js v14
 
 此外該機器人不定時上線，如果您想體驗聯繫[email:rick783256@gmail.com]並邀請 https://discord.com/oauth2/authorize?client_id=1270504075741630464&permissions=8&integration_type=0&scope=bot
 
-### 貢獻
+## 貢獻
 
 如果您有興趣為此機器人做出貢獻，請參閱我們的 [貢獻準則](https://github.com/Rick783/Discord-bot/blob/main/CONTRIBUTING.md)。
 
-### 問題和反饋
+## 問題和反饋
 
 如果您遇到任何問題或有建議，請在 [GitHub 存儲庫](https://github.com/Rick783/Discord-bot) 中提交問題。
 
