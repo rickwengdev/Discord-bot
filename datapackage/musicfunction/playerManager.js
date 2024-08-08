@@ -111,7 +111,7 @@ class MusicPlayer {
                 return;
             }
 
-            const info = await ytdl.getBasicInfo(this.songUrl, { agent });
+            const info = await ytdl.getBasicInfo(this.songUrl);
             const embed = new EmbedBuilder()
                 .setColor('#FF0000')
                 .setTitle(info.videoDetails.title)
