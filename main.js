@@ -102,7 +102,7 @@ client.on('ready', () => {
 
 // 客戶端準備好後輸出日誌
 client.once(Events.ClientReady, c => {
-    console.log(`Ready! Signed in as ${c.user.tag}`)
+    console.log(`✅Ready! Signed in as ${c.user.tag}`)
 });
 
 // 設置訊息反應事件

@@ -8,5 +8,5 @@ export const data = new SlashCommandBuilder()
 // 定義執行 slash 指令的函數
 export async function execute(interaction) {
     // 回覆測試成功的訊息
-    await interaction.reply('✅The robot is running')
+    await interaction.reply('The robot is running')
 }

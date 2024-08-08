@@ -16,7 +16,7 @@ function guildMember(client) {
         const guildConfig = config[guildId];
         
         if (!guildConfig) {
-            console.log(`Configuration not found for server ${guildId}.`);
+            console.log(`❕Configuration not found for server ${guildId}.`);
             return;
         }
 
@@ -48,7 +48,7 @@ function guildMember(client) {
                 console.error('An error occurred while sending the welcome message or banner:', error);
             }
         } else {
-            console.log('Welcome channel not found.');
+            console.log('❕Welcome channel not found.');
         }
     });
 
@@ -58,7 +58,7 @@ function guildMember(client) {
         const guildConfig = config[guildId];
         
         if (!guildConfig) {
-            console.log(`Configuration not found for server ${guildId}.`);
+            console.log(`❕Configuration not found for server ${guildId}.`);
             return;
         }
 
@@ -72,7 +72,7 @@ function guildMember(client) {
                 console.error('An error occurred while sending away message:', error);
             }
         } else {
-            console.log('Leave channel not found.');
+            console.log('❕Leave channel not found.');
         }
     });
 }

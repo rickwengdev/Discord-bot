@@ -43,7 +43,7 @@ const deleteMessagesAsync = async (interaction, numberOfMessagesToDelete, timeRa
 // 根據條件刪除消息，返回刪除的消息數量
 const deleteMessages = async (channel, numberOfMessagesToDelete, timeRangeBig) => {
     if (timeRangeBig || numberOfMessagesToDelete > 100) {
-        console.log('Too many messages to delete at once. Performing multiple deletes.');
+        console.log('🔄Too many messages to delete at once. Performing multiple deletes.');
         return bulkDeleteMessages(channel, numberOfMessagesToDelete);
     } else {
         const deletedMessages = await channel.bulkDelete(numberOfMessagesToDelete);
