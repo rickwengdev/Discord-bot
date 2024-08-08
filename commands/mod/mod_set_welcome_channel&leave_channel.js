@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { SlashCommandBuilder } from 'discord.js';
+import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 import { fileURLToPath } from 'node:url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -46,13 +46,10 @@ export const data = new SlashCommandBuilder()
             .setDescription('The channel to set')
             .setRequired(true)
             .addChannelTypes(0) // 0 is for text channels
-    );
+    )
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
 
 export const execute = async (interaction) => {
-    if (!interaction.member.permissions.has('MANAGE_GUILD')) {
-        return interaction.reply('You do not have permission to use this command.');
-    }
-
     const type = interaction.options.getString('type');
     const channel = interaction.options.getChannel('channel');
     const channelId = channel.id;

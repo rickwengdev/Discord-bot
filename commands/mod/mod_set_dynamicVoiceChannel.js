@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { PermissionsBitField, SlashCommandBuilder } from 'discord.js';
+import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 
 // 获取当前目录路径
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
@@ -34,7 +34,7 @@ export const data = new SlashCommandBuilder()
             .setRequired(true)
             .addChannelTypes(2) // 2 is for voice channels
     )
-    .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageGuild);
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
     ;
 
 export const execute = async (interaction) => {

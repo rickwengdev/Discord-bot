@@ -12,7 +12,7 @@ export const data = new SlashCommandBuilder()
     .addBooleanOption(option =>
         option.setName('reliable_vintage_model')
             .setDescription('是否為超過兩週的訊息或超過100條訊息的刪除模式'))
-    .setDefaultMemberPermissions(PermissionFlagsBits.Administrator)
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
 
 // 執行 Slash 命令的處理函數
 export async function execute(interaction) {

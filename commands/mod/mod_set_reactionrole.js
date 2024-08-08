@@ -1,8 +1,7 @@
-import { SlashCommandBuilder } from '@discordjs/builders';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { ChannelType } from 'discord.js';
+import { SlashCommandBuilder, ChannelType, PermissionFlagsBits } from 'discord.js';
 
 // 获取当前模块的目录路径
 const __filename = fileURLToPath(import.meta.url);
@@ -50,13 +49,10 @@ export const data = new SlashCommandBuilder()
         option.setName('role')
             .setDescription('The role to be assigned')
             .setRequired(true)
-    );
+    )
+    .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild);
 
 export const execute = async (interaction) => {
-    if (!interaction.member.permissions.has('MANAGE_GUILD')) {
-        return interaction.reply('You do not have permission to use this command.');
-    }
-
     const channel = interaction.options.getChannel('channel');
     const messageId = interaction.options.getString('messageid');
     const emoji = interaction.options.getString('emoji');
