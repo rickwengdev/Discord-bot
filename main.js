@@ -100,7 +100,7 @@ client.on(Events.InteractionCreate, async interaction => {
 
 // 設置客戶端狀態
 client.on('ready', () => {
-    client.user.setPresence({ activities: [{ name: '死神塔' }], status: 'dnd' })
+    client.user.setPresence({ activities: [{ name: '別再玩遊戲啦老哥deadline剩幾天' }], status: 'dnd' })
 })
 
 // 客戶端準備好後輸出日誌

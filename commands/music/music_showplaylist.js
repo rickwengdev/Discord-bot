@@ -1,58 +1,60 @@
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js'
-import { getPlaylist } from '../../datapackage/musicfunction/playerManager.js'
+import { getMusicPlayer, errorhandler } from '../../datapackage/musicfunction/playerManager.js'
 import ytdl from '@distube/ytdl-core';
 
 async function viewPlaylist(interaction) {
-    const playlist = getPlaylist(interaction.guild.id)
-    // 创建嵌入消息
+    const guildId = interaction.guild.id;
+    const player = getMusicPlayer(guildId);
+    const playlist = player.getPlaylist();
+    // 創建一個嵌入
     const embed = new EmbedBuilder()
         .setColor('#FF0000')
-        .setTitle('播放列表')
-        .setDescription('以下是当前播放列表中的歌曲：')
+        .setTitle('playlist')
+        .setDescription('Here are the songs in the current playlist:')
 
-    // 创建字段数组
+    // 創建一個空的字段數組
     const fields = [];
 
-    // 为每首歌添加一个字段
+    // 遍歷播放列表中的每個歌曲
     for (const songUrl of playlist) {
         try {
-            const info = await ytdl.getInfo(songUrl);
+            const info = await ytdl.getBasicInfo(songUrl);
             const title = info.videoDetails.title;
             const thumbnail = info.videoDetails.thumbnails[0].url;
 
-            // 将歌曲信息添加到字段数组
+            // 將歌曲信息添加到字段數組
             fields.push({
-                name: title, // 歌曲标题
-                value: '\u200b', // 空字符，用于保持字段之间的间隔
+                name: title, // 歌曲標題
+                value: songUrl, // 歌曲 URL
                 inline: false
             });
 
-            // 在嵌入中设置封面图（注意：封面图只能设置一次）
+            // 在第一個字段中添加歌曲縮略圖
             embed.setThumbnail(thumbnail);
 
         } catch (error) {
-            console.error('获取歌曲信息时出错:', error);
+            errorhandler(error);
             fields.push({
-                name: '错误',
-                value: '无法获取歌曲信息',
+                name: 'error',
+                value: 'Unable to get song information',
                 inline: false
             });
         }
     }
 
-    // 使用 addFields 方法添加字段数组
+    // 使用 addFields 方法將字段數組添加到嵌入
     embed.addFields(fields);
 
-    // 发送嵌入消息
+    // 回覆互動並顯示播放列表
     await interaction.reply({ embeds: [embed] });
 }
 
 // 定義 slash command 的結構
 export const data = new SlashCommandBuilder()
     .setName('music_showplaylist')
-    .setDescription('顯示當前播放列表')
+    .setDescription('Show current playlist')
 
-// 執行 slash command 的函數
+// 定義 slash command 執行函數
 export async function execute(interaction) {
     // 調用 viewPlaylist 函數顯示播放列表
     return viewPlaylist(interaction)

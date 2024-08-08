@@ -1,14 +1,16 @@
-import { SlashCommandBuilder } from 'discord.js'
-import { playNextSong } from '../../datapackage/musicfunction/playerManager.js'
+import { SlashCommandBuilder } from 'discord.js';
+import { getMusicPlayer } from '../../datapackage/musicfunction/playerManager.js';
 
-// 定義 slash command 的基本資訊
+// 定義 Slash Command
 export const data = new SlashCommandBuilder()
     .setName('music_play')
-    .setDescription('播放播放列表中的一首歌曲')
+    .setDescription('Play the first song in the playlist');
 
-// 執行 slash command 的主函數
+// 定義 Slash Command 執行函數
 export async function execute(interaction) {
-        // 在 playerManager.js 中處理連接和播放
-        playNextSong(interaction)
-        interaction.deferReply()
+    await interaction.deferReply(); // 立即回覆互動以避免超時
+
+    const guildId = interaction.guild.id;
+    const player = getMusicPlayer(guildId);
+    player.playSong(interaction);
 }
