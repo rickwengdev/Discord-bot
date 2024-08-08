@@ -129,7 +129,8 @@ Discord.js v14
 
 現在，機器人應已連接到您的 Discord 伺服器，準備提供音樂播放功能。如果你需要其他的功能請參照上述指令使用方式配置，確保機器人具有所需的權限（音樂、消息管理等）並選擇了正確的意圖（Intents）。
 
-此外該機器人不定時上線，如果您想體驗聯繫[rick783256@gmail.com]並邀請 https://discord.com/oauth2/authorize?client_id=1270504075741630464&permissions=8&integration_type=0&scope=bot
+此外您部署前想體驗聯繫該機器人 rick783256@gmail.com 並邀請 
+https://discord.com/oauth2/authorize?client_id=1270504075741630464&permissions=8&integration_type=0&scope=bot
 
 ## 貢獻
 
