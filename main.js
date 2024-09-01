@@ -49,22 +49,26 @@ const commandFolders = readdirSync(foldersPath).filter(folder => {
     return statSync(folderPath).isDirectory()
 });
 
-// 加載所有命令文件
+// 加载所有命令文件
 for (const folder of commandFolders) {
-    const commandsPath = path.join(foldersPath, folder)
-    const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js') && statSync(path.join(commandsPath, file)).isFile())
+    const commandsPath = path.join(foldersPath, folder);
+    const commandFiles = readdirSync(commandsPath).filter(file => file.endsWith('.js') && statSync(path.join(commandsPath, file)).isFile());
 
-    // 遍歷每個命令文件
+    // 遍历每个命令文件
     for (const file of commandFiles) {
-        const filePath = path.join(commandsPath, file)
-        const command = await import(filePath)
-
-        // 檢查命令文件是否包含必需的屬性
-        if ('data' in command && 'execute' in command) {
-            client.commands.set(command.data.name, command)
-        } else {
-            console.log(`[WARNING] The command in ${filePath} is missing a required "data" or "execute" attribute.`)
-        }
+        const filePath = path.join(commandsPath, file);
+        import(filePath)
+            .then(command => {
+                // 检查命令文件是否包含必需的属性
+                if ('data' in command && 'execute' in command) {
+                    client.commands.set(command.data.name, command);
+                } else {
+                    console.log(`[WARNING] The command in ${filePath} is missing a required "data" or "execute" attribute.`);
+                }
+            })
+            .catch(error => {
+                console.error(`[ERROR] Failed to load command ${filePath}:`, error);
+            });
     }
 }
 
@@ -105,6 +109,7 @@ client.once(Events.ClientReady, c => {
     console.log(`✅Ready! Signed in as ${c.user.tag}`)
 });
 
+export function setup() {
 // 設置訊息反應事件
 messageReaction(client)
 
@@ -113,6 +118,9 @@ guildMember(client)
 
 // 設置自動語音頻道功能
 dynamicvoicechannel(client)
+}
+
+setup()
 
 // 登錄到 Discord
 client.login(process.env.token)

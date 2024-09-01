@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
-
+import { setup } from '../../main.js'
 // 獲取當前檔案的路徑
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
@@ -47,6 +47,8 @@ export const execute = async (interaction) => {
 
     // 更新 JSON 檔案
     updateConfig(guildId, channelId);
+
+    setup();
 
     await interaction.reply(`Dynamic voice channel has been set to <#${channelId}>.`);
 };

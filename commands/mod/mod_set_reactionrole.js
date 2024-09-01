@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { SlashCommandBuilder, ChannelType, PermissionFlagsBits } from 'discord.js';
+import { setup } from '../../main.js';
 
 // 獲取當前檔案的路徑
 const __filename = fileURLToPath(import.meta.url);
@@ -11,6 +12,7 @@ const configPath = path.resolve(__dirname, '../../datapackage/modfunction/messag
 
 // 讀取 JSON 檔案
 function loadConfig() {
+    console.log(`Loading config from: ${configPath}`); // 调试路径
     try {
         return JSON.parse(fs.readFileSync(configPath, 'utf8'));
     } catch (error) {
@@ -36,7 +38,7 @@ export const data = new SlashCommandBuilder()
         option.setName('channel')
             .setDescription('The channel where the message is located')
             .setRequired(true)
-            .addChannelTypes(0) // 0 = 文字頻道
+            .addChannelTypes(ChannelType.GuildText)
     )
     .addStringOption(option =>
         option.setName('messageid')
@@ -63,7 +65,7 @@ export const execute = async (interaction) => {
     const role = interaction.options.getRole('role');
 
     // 確認選擇的頻道是文字頻道
-    if (channel.type !== ChannelType.GuildText) {
+    if (channel.type == ChannelType.GuildVoice) {
         return interaction.reply('The selected channel is not a text channel.');
     }
 
@@ -78,9 +80,29 @@ export const execute = async (interaction) => {
         config[guildId][messageId] = {};
     }
 
+    const emojiName = extractEmojiName(emoji);
+
     // 設定反應角色
-    config[guildId][messageId][emoji] = role.id;
+    config[guildId][messageId][emojiName] = role.id;
     saveConfig(config);
 
     await interaction.reply(`Reaction role set: Message ID ${messageId}, Emoji ${emoji}, Role ${role.name}`);
+
+    setup();
 };
+
+/**
+ * 提取 emoji 名称，过滤掉 ID
+ * @param {string} emoji - 表情符号的字符串，可能是 `<:name:id>` 或 Unicode 表情符号
+ * @returns {string} - 表情符号的名称
+ */
+function extractEmojiName(emoji) {
+    // 自定义表情符号格式：<:name:id>
+    const customEmojiRegex = /^<:(.+?):\d+>$/;
+    const match = emoji.match(customEmojiRegex);
+    if (match) {
+        return match[1]; // 返回名称部分
+    }
+    // 对于 Unicode 表情符号，直接返回
+    return emoji;
+}
