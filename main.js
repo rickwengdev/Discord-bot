@@ -18,6 +18,9 @@ import { guildMember } from './datapackage/modfunction/guildMember.js'
 // 引入自定義模組，處理自動語音頻道相關功能
 import { dynamicvoicechannel } from './datapackage/modfunction/dynamicVoiceChannel.js'
 
+// 引入自定義模組，處理日誌相關功能
+import { setupLogging } from './datapackage/modfunction/logservermessage.js'
+
 // 載入 .env 文件中的環境變數
 dotenv.config()
 
@@ -118,7 +121,12 @@ guildMember(client)
 
 // 設置自動語音頻道功能
 dynamicvoicechannel(client)
+
+// 設置日誌功能
+setupLogging(client)
 }
+
+
 
 setup()
 
