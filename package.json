@@ -10,7 +10,8 @@
     "dotenv": "^16.3.1",
     "ffmpeg-static": "^5.2.0",
     "libsodium-wrappers": "^0.7.14",
-    "package": "^1.0.1"
+    "package": "^1.0.1",
+    "xml2js": "^0.6.2"
   },
   "type": "module"
 }

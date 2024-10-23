@@ -21,6 +21,9 @@ import { dynamicvoicechannel } from './datapackage/modfunction/dynamicVoiceChann
 // 引入自定義模組，處理日誌相關功能
 import { setupLogging } from './datapackage/modfunction/logservermessage.js'
 
+// 引入自定義模組，處理 YouTube 頻道追蹤相關功能
+import { startYouTubeFollowRSS } from './datapackage/modfunction/followYTchannels.js'
+
 // 載入 .env 文件中的環境變數
 dotenv.config()
 
@@ -125,8 +128,6 @@ dynamicvoicechannel(client)
 // 設置日誌功能
 setupLogging(client)
 }
-
-
 
 setup()
 

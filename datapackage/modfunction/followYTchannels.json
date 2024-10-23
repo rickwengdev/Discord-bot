@@ -1,0 +1,14 @@
+{
+    "123456789012345678": {
+      "youtubeChannels": {
+        "UCG1NDzbfC2G3fp6EDNUO8Uw": {
+          "lastVideoId": "初始影片ID",
+          "discordChannelId": "1270583952318398546"
+        },
+        "其他YT頻道ID": {
+          "lastVideoId": "初始影片ID",
+          "discordChannelId": "DISCORD_CHANNEL_ID_2"
+        }
+      }
+    }
+  }
