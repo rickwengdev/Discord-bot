@@ -20,8 +20,11 @@ class GuildMembers {
     }
 
     guildMember(client) {
-        if (this.eventsRegistered) return; // 如果事件已註冊，則返回以防止重複綁定
-
+        // 移除已存在的 `guildMemberAdd` 和 `guildMemberRemove` 事件監聽器
+        client.removeAllListeners('guildMemberAdd');
+        client.removeAllListeners('guildMemberRemove');
+    
+        // 添加新監聽器
         client.on('guildMemberAdd', async (member) => {
             try {
                 await this.handleGuildMemberAdd(client, member);
@@ -29,7 +32,7 @@ class GuildMembers {
                 console.error('An error occurred in guildMemberAdd event:', error);
             }
         });
-
+    
         client.on('guildMemberRemove', async (member) => {
             try {
                 await this.handleGuildMemberRemove(client, member);
@@ -37,7 +40,7 @@ class GuildMembers {
                 console.error('An error occurred in guildMemberRemove event:', error);
             }
         });
-
+    
         this.eventsRegistered = true; // 標記事件已綁定
     }
 
