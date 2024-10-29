@@ -38,7 +38,6 @@ export const data = new SlashCommandBuilder()
         option.setName('channel')
             .setDescription('The channel where the message is located')
             .setRequired(true)
-            .addChannelTypes(ChannelType.GuildText)
     )
     .addStringOption(option =>
         option.setName('messageid')
