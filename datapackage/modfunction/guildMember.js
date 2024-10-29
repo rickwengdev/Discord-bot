@@ -3,28 +3,64 @@ import path from 'path';
 import { EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import { fileURLToPath } from 'node:url';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+class GuildMembers {
+    constructor() {
+        this.__filename = fileURLToPath(import.meta.url);
+        this.__dirname = path.dirname(this.__filename);
+        this.configPath = path.resolve(this.__dirname, 'guildMember.json');
 
-const configPath = path.resolve(__dirname, 'guildMember.json');
-const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
-
-function guildMember(client) {
-    // 用戶加入伺服器訊息
-    client.on('guildMemberAdd', async member => {
-        const guildId = member.guild.id;
-        const guildConfig = config[guildId];
+        try {
+            this.config = JSON.parse(fs.readFileSync(this.configPath, 'utf8'));
+        } catch (error) {
+            console.error('Error loading guildMember.json configuration:', error);
+            this.config = {}; // 設置默認值以防錯誤
+        }
         
+        this.eventsRegistered = false; // 防止多次事件綁定
+    }
+
+    guildMember(client) {
+        if (this.eventsRegistered) return; // 如果事件已註冊，則返回以防止重複綁定
+
+        client.on('guildMemberAdd', async (member) => {
+            try {
+                await this.handleGuildMemberAdd(client, member);
+            } catch (error) {
+                console.error('An error occurred in guildMemberAdd event:', error);
+            }
+        });
+
+        client.on('guildMemberRemove', async (member) => {
+            try {
+                await this.handleGuildMemberRemove(client, member);
+            } catch (error) {
+                console.error('An error occurred in guildMemberRemove event:', error);
+            }
+        });
+
+        this.eventsRegistered = true; // 標記事件已綁定
+    }
+
+    async handleGuildMemberAdd(client, member) {
+        const guildId = member.guild.id;
+        const guildConfig = this.config[guildId];
+
+        console.log(`guildId: ${guildId}, guildConfig: ${guildConfig}`);
+
         if (!guildConfig) {
             console.log(`❕Configuration not found for server ${guildId}.`);
             return;
         }
 
         const welcomeChannelID = guildConfig.welcomeChannelID;
-        const welcomeBannerPath = path.join(__dirname, 'welcome-banner.png');
         const welcomeChannel = client.channels.cache.get(welcomeChannelID);
+        const welcomeBannerPath = path.join(this.__dirname, 'welcome-banner.png');
 
-        // 讀取檔案內容為 Buffer
+        if (!welcomeChannel) {
+            console.log('❕Welcome channel not found.');
+            return;
+        }
+
         let bannerBuffer;
         try {
             bannerBuffer = await fs.promises.readFile(welcomeBannerPath);
@@ -32,31 +68,27 @@ function guildMember(client) {
             console.log('Unable to read welcome banner file', error);
         }
 
-        if (welcomeChannel) {
-            try {
-                const embed = new EmbedBuilder()
-                    .setTitle(`welcome ${member.user.tag} Join server!`)
-                    .setDescription(`${member.user.toString()} Welcome!`)
-                    .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: 'png', size: 256 }));
-                
-                if (bannerBuffer) {
-                    await welcomeChannel.send({ embeds: [embed], files: [new AttachmentBuilder(bannerBuffer, 'welcome-banner.png')] });
-                } else {
-                    await welcomeChannel.send({ embeds: [embed] });
-                }
-            } catch (error) {
-                console.error('An error occurred while sending the welcome message or banner:', error);
-            }
-        } else {
-            console.log('❕Welcome channel not found.');
-        }
-    });
+        const embed = new EmbedBuilder()
+            .setTitle(`Welcome ${member.user.tag} to the server!`)
+            .setDescription(`${member.user.toString()} Welcome!`)
+            .setThumbnail(member.user.displayAvatarURL({ dynamic: true, format: 'png', size: 256 }));
 
-    // 用戶離開伺服器訊息
-    client.on('guildMemberRemove', async member => {
+        const messageOptions = { embeds: [embed] };
+        if (bannerBuffer) {
+            messageOptions.files = [new AttachmentBuilder(bannerBuffer, 'welcome-banner.png')];
+        }
+
+        try {
+            await welcomeChannel.send(messageOptions);
+        } catch (error) {
+            console.error('An error occurred while sending the welcome message or banner:', error);
+        }
+    }
+
+    async handleGuildMemberRemove(client, member) {
         const guildId = member.guild.id;
-        const guildConfig = config[guildId];
-        
+        const guildConfig = this.config[guildId];
+
         if (!guildConfig) {
             console.log(`❕Configuration not found for server ${guildId}.`);
             return;
@@ -65,16 +97,17 @@ function guildMember(client) {
         const leaveChannelID = guildConfig.leaveChannelID;
         const leaveChannel = client.channels.cache.get(leaveChannelID);
 
-        if (leaveChannel) {
-            try {
-                await leaveChannel.send(`**${member.user.tag}** Left the server.`);
-            } catch (error) {
-                console.error('An error occurred while sending away message:', error);
-            }
-        } else {
+        if (!leaveChannel) {
             console.log('❕Leave channel not found.');
+            return;
         }
-    });
+
+        try {
+            await leaveChannel.send(`**${member.user.tag}** has left the server.`);
+        } catch (error) {
+            console.error('An error occurred while sending the leave message:', error);
+        }
+    }
 }
 
-export { guildMember };
+export { GuildMembers };

@@ -13,7 +13,7 @@ import dotenv from 'dotenv'
 import { messageReaction } from './datapackage/modfunction/messageReaction.js'
 
 // 引入自定義模組，處理用戶加入伺服器相關功能
-import { guildMember } from './datapackage/modfunction/guildMember.js'
+import { GuildMembers } from './datapackage/modfunction/guildMember.js'
 
 // 引入自定義模組，處理自動語音頻道相關功能
 import { dynamicvoicechannel } from './datapackage/modfunction/dynamicVoiceChannel.js'
@@ -116,17 +116,18 @@ client.once(Events.ClientReady, c => {
 });
 
 export function setup() {
-// 設置訊息反應事件
-messageReaction(client)
+    // 設置訊息反應事件
+    messageReaction(client)
 
-// 設置用戶加入伺服器事件
-guildMember(client)
+    // 設置用戶加入伺服器事件
+    const guildMembers = new GuildMembers(client)
+    guildMembers.guildMember(client)
 
-// 設置自動語音頻道功能
-dynamicvoicechannel(client)
+    // 設置自動語音頻道功能
+    dynamicvoicechannel(client)
 
-// 設置日誌功能
-setupLogging(client)
+    // 設置日誌功能
+    setupLogging(client)
 }
 
 setup()
