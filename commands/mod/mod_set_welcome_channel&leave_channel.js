@@ -70,6 +70,4 @@ export const execute = async (interaction) => {
     } else {
         await interaction.reply('Invalid channel type specified.');
     }
-
-    setup();
 };
