@@ -87,7 +87,7 @@ client.once(Events.ClientReady, c => {
     setup();
 });
 
-function setup() {
+export function setup() {
     // 設置訊息反應事件
     messageReaction(client);
 

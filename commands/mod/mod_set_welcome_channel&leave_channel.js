@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import { SlashCommandBuilder, PermissionFlagsBits } from 'discord.js';
 import { fileURLToPath } from 'node:url';
-import { setup } from '../../main.js'
 
 // 獲取當前檔案的路徑
 const __filename = fileURLToPath(import.meta.url);
