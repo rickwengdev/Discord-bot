@@ -7,7 +7,7 @@ const __dirname = path.dirname(new URL(import.meta.url).pathname);
 
 function dynamicvoicechannel(client) {
     // 讀取配置文件
-    const configPath = path.resolve(__dirname, 'dynamicvoicechannel.json');
+    const configPath = path.resolve(__dirname, 'dynamicVoiceChannel.json');
     const config = JSON.parse(fs.readFileSync(configPath, 'utf8'));
     const serverTrackingChannels = config;
 
