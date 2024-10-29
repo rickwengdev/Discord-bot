@@ -21,6 +21,7 @@ class GuildMembers {
 
     guildMember(client) {
         // 移除已存在的 `guildMemberAdd` 和 `guildMemberRemove` 事件監聽器
+        console.log('guildMemberAdd listeners:', client.listeners('guildMemberAdd').length);
         client.removeAllListeners('guildMemberAdd');
         client.removeAllListeners('guildMemberRemove');
     
