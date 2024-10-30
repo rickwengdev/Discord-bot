@@ -3,49 +3,56 @@ import path from 'path';
 import { EmbedBuilder, AttachmentBuilder } from 'discord.js';
 import { fileURLToPath } from 'node:url';
 
-class GuildMembers {
-    constructor() {
-        this.__filename = fileURLToPath(import.meta.url);
-        this.__dirname = path.dirname(this.__filename);
-        this.configPath = path.resolve(this.__dirname, 'guildMember.json');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
-        try {
-            this.config = JSON.parse(fs.readFileSync(this.configPath, 'utf8'));
-        } catch (error) {
-            console.error('Error loading guildMember.json configuration:', error);
-            this.config = {}; // 設置默認值以防錯誤
-        }
+class GuildMembers {
+    constructor(client) {
+        this.client = client;
+        this.configPath = path.resolve(__dirname, 'guildMember.json');
+        this.config = this.loadConfig();
         
-        this.eventsRegistered = false; // 防止多次事件綁定
+        // 綁定事件處理器
+        this.registerEvents();
     }
 
-    guildMember(client) {
-        // 移除已存在的 `guildMemberAdd` 和 `guildMemberRemove` 事件監聽器
-        console.log('guildMemberAdd listeners:', client.listeners('guildMemberAdd').length);
-        client.removeAllListeners('guildMemberAdd');
-        client.removeAllListeners('guildMemberRemove');
-    
-        // 添加新監聽器
-        client.on('guildMemberAdd', async (member) => {
+    // 加載配置文件
+    loadConfig() {
+        try {
+            return JSON.parse(fs.readFileSync(this.configPath, 'utf8'));
+        } catch (error) {
+            console.error('Error loading guildMember.json configuration:', error);
+            return {}; // 設置默認值以防錯誤
+        }
+    }
+
+    // 綁定事件
+    registerEvents() {
+        // 移除已存在的事件監聽器以防止重複綁定
+        this.client.removeAllListeners('guildMemberAdd');
+        this.client.removeAllListeners('guildMemberRemove');
+        
+        // 新增 `guildMemberAdd` 事件監聽器
+        this.client.on('guildMemberAdd', async (member) => {
             try {
-                await this.handleGuildMemberAdd(client, member);
+                await this.handleGuildMemberAdd(member);
             } catch (error) {
                 console.error('An error occurred in guildMemberAdd event:', error);
             }
         });
-    
-        client.on('guildMemberRemove', async (member) => {
+        
+        // 新增 `guildMemberRemove` 事件監聽器
+        this.client.on('guildMemberRemove', async (member) => {
             try {
-                await this.handleGuildMemberRemove(client, member);
+                await this.handleGuildMemberRemove(member);
             } catch (error) {
                 console.error('An error occurred in guildMemberRemove event:', error);
             }
         });
-    
-        this.eventsRegistered = true; // 標記事件已綁定
     }
 
-    async handleGuildMemberAdd(client, member) {
+    // 處理成員加入
+    async handleGuildMemberAdd(member) {
         const guildId = member.guild.id;
         const guildConfig = this.config[guildId];
 
@@ -57,8 +64,8 @@ class GuildMembers {
         }
 
         const welcomeChannelID = guildConfig.welcomeChannelID;
-        const welcomeChannel = client.channels.cache.get(welcomeChannelID);
-        const welcomeBannerPath = path.join(this.__dirname, 'welcome-banner.png');
+        const welcomeChannel = this.client.channels.cache.get(welcomeChannelID);
+        const welcomeBannerPath = path.join(__dirname, 'welcome-banner.png');
 
         if (!welcomeChannel) {
             console.log('❕Welcome channel not found.');
@@ -89,7 +96,8 @@ class GuildMembers {
         }
     }
 
-    async handleGuildMemberRemove(client, member) {
+    // 處理成員離開
+    async handleGuildMemberRemove(member) {
         const guildId = member.guild.id;
         const guildConfig = this.config[guildId];
 
@@ -99,7 +107,7 @@ class GuildMembers {
         }
 
         const leaveChannelID = guildConfig.leaveChannelID;
-        const leaveChannel = client.channels.cache.get(leaveChannelID);
+        const leaveChannel = this.client.channels.cache.get(leaveChannelID);
 
         if (!leaveChannel) {
             console.log('❕Leave channel not found.');

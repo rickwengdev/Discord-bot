@@ -12,7 +12,7 @@ const configPath = path.resolve(__dirname, '../../datapackage/modfunction/messag
 
 // 讀取 JSON 檔案
 function loadConfig() {
-    console.log(`Loading config from: ${configPath}`); // 调试路径
+    console.log(`Loading config from: ${configPath}`);
     try {
         return JSON.parse(fs.readFileSync(configPath, 'utf8'));
     } catch (error) {
@@ -60,7 +60,7 @@ export const data = new SlashCommandBuilder()
 export const execute = async (interaction) => {
     const channel = interaction.options.getChannel('channel');
     const messageId = interaction.options.getString('messageid');
-    const emoji = interaction.options.getString('emoji');
+    const emojiInput = interaction.options.getString('emoji');
     const role = interaction.options.getRole('role');
 
     // 確認選擇的頻道是文字頻道
@@ -70,38 +70,50 @@ export const execute = async (interaction) => {
 
     const guildId = interaction.guild.id;
     const config = loadConfig();
-    
+
     if (!config[guildId]) {
         config[guildId] = {};
     }
-    
+
     if (!config[guildId][messageId]) {
         config[guildId][messageId] = {};
     }
 
-    const emojiName = extractEmojiName(emoji);
+    const emojiId = await getEmojiId(interaction, emojiInput);
+
+    if (!emojiId) {
+        return interaction.reply(`Emoji ${emojiInput} is not valid or not found.`);
+    }
 
     // 設定反應角色
-    config[guildId][messageId][emojiName] = role.id;
+    config[guildId][messageId][emojiId] = role.id;
     saveConfig(config);
 
-    await interaction.reply(`Reaction role set: Message ID ${messageId}, Emoji ${emoji}, Role ${role.name}`);
+    await interaction.reply(`Reaction role set: Message ID ${messageId}, Emoji ${emojiInput}, Role ${role.name}`);
 
     setup();
 };
 
 /**
- * 提取 emoji 名称，过滤掉 ID
- * @param {string} emoji - 表情符号的字符串，可能是 `<:name:id>` 或 Unicode 表情符号
- * @returns {string} - 表情符号的名称
+ * 獲取表情符號的 ID。如果是自定義表情符號，返回 ID；如果是 Unicode 表情符號，直接返回輸入。
+ * @param {object} interaction - Discord 互動對象
+ * @param {string} emojiInput - 表情符號的字符串，可能是 `<:name:id>` 或 Unicode 表情符號
+ * @returns {string|null} - 表情符號的 ID 或名稱
  */
-function extractEmojiName(emoji) {
-    // 自定义表情符号格式：<:name:id>
-    const customEmojiRegex = /^<:(.+?):\d+>$/;
-    const match = emoji.match(customEmojiRegex);
+async function getEmojiId(interaction, emojiInput) {
+    const customEmojiRegex = /^<:(.+?):(\d+)>$/;
+    const match = emojiInput.match(customEmojiRegex);
+
     if (match) {
-        return match[1]; // 返回名称部分
+        // 自定義表情符號，返回 ID 部分
+        return match[2];
+    } else {
+        // 嘗試在伺服器表情符號中查找對應的 Unicode 名稱
+        const emoji = interaction.guild.emojis.cache.find(e => e.name === emojiInput);
+        if (emoji) {
+            return emoji.id;
+        }
+        // 如果是標準 Unicode 表情符號，直接返回輸入（表示這是直接可用的 Unicode）
+        return emojiInput;
     }
-    // 对于 Unicode 表情符号，直接返回
-    return emoji;
 }

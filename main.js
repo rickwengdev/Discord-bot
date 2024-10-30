@@ -3,7 +3,7 @@ import { fileURLToPath } from 'node:url';
 import path, { dirname } from 'node:path';
 import { Client, Partials, Events, Collection, GatewayIntentBits } from 'discord.js';
 import dotenv from 'dotenv';
-import { messageReaction } from './datapackage/modfunction/messageReaction.js';
+import { MessageReactionHandler } from './datapackage/modfunction/messageReaction.js';
 import { GuildMembers } from './datapackage/modfunction/guildMember.js';
 import { dynamicvoicechannel } from './datapackage/modfunction/dynamicVoiceChannel.js';
 import { setupLogging } from './datapackage/modfunction/logservermessage.js';
@@ -89,11 +89,10 @@ client.once(Events.ClientReady, c => {
 
 export function setup() {
     // 設置訊息反應事件
-    messageReaction(client);
+    new MessageReactionHandler(client);
 
     // 設置用戶加入伺服器事件
-    const guildMembers = new GuildMembers(client);
-    guildMembers.guildMember(client);
+    new GuildMembers(client);
 
     // 設置自動語音頻道功能
     dynamicvoicechannel(client);
